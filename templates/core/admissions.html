@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Admissions | NasCOHST{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<section class="mb-16 text-center max-w-3xl mx-auto">
+  <h1 class="text-4xl font-bold mb-4">
+    Admissions
+  </h1>
+  <p class="text-gray-600 text-lg">
+    Everything you need to know about applying to
+    Nasarawa State College of Health Sciences and Technology, Keffi.
+  </p>
+</section>
+
+<!-- MAIN GRID -->
+<section class="grid lg:grid-cols-3 gap-12 mb-20">
+
+  <!-- LEFT CONTENT -->
+  <div class="lg:col-span-2 space-y-12">
+
+    <!-- APPLICATION PROCEDURE -->
+    <div class="bg-white rounded-xl shadow-sm p-8">
+      <h2 class="text-2xl font-semibold mb-4">
+        Application Procedure (National Diploma)
+      </h2>
+
+      <ol class="list-decimal list-inside space-y-3 text-gray-700">
+        <li>
+          Apply through the <strong>JAMB portal</strong>.
+        </li>
+        <li>
+          Upload your O’Level results (WAEC / NECO or equivalent) on the JAMB platform.
+        </li>
+        <li>
+          Ensure your subject combination matches programme requirements
+          (English, Mathematics, Biology, Chemistry, Physics where applicable).
+        </li>
+        <li>
+          Await invitation from the College for the aptitude test.
+        </li>
+        <li>
+          Successful candidates proceed with further admission steps
+          as directed by the College.
+        </li>
+      </ol>
+    </div>
+
+    <!-- GENERAL REQUIREMENTS -->
+    <div class="bg-white rounded-xl shadow-sm p-8">
+      <h2 class="text-2xl font-semibold mb-4">
+        General Entry Requirements
+      </h2>
+
+      <ul class="list-disc list-inside space-y-2 text-gray-700">
+        <li>Five (5) credit passes in relevant subjects including English and Mathematics</li>
+        <li>Credits must be obtained in not more than two sittings</li>
+        <li>Relevant science subjects depending on the programme</li>
+      </ul>
+    </div>
+
+    <!-- FAQs -->
+    <div class="bg-white rounded-xl shadow-sm p-8">
+      <h2 class="text-2xl font-semibold mb-6">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-6 text-gray-700">
+        <div>
+          <p class="font-medium">
+            Does meeting the minimum requirements guarantee admission?
+          </p>
+          <p class="text-sm text-gray-600 mt-1">
+            No. Admission is competitive and subject to available slots
+            and performance in the aptitude test.
+          </p>
+        </div>
+
+        <div>
+          <p class="font-medium">
+            Are all programmes accredited?
+          </p>
+          <p class="text-sm text-gray-600 mt-1">
+            Yes. All National Diploma programmes are fully accredited by NBTE.
+          </p>
+        </div>
+
+        <div>
+          <p class="font-medium">
+            Can I apply without JAMB?
+          </p>
+          <p class="text-sm text-gray-600 mt-1">
+            No. JAMB application is mandatory for National Diploma programmes.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="space-y-8">
+
+    <!-- ADMISSIONS OFFICER -->
+    {% if admissions_officer %}
+    <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+      <div class="w-32 h-32 mx-auto rounded-full bg-gray-100 overflow-hidden mb-4">
+        {% if admissions_officer.photo %}
+        <img src="{{ admissions_officer.photo.url }}"
+             alt="Admissions Officer"
+             class="w-full h-full object-cover">
+        {% endif %}
+      </div>
+
+      <h3 class="font-semibold">
+        {{ admissions_officer.name }}
+      </h3>
+      <p class="text-primary text-sm">
+        Admissions Officer
+      </p>
+
+      <a href="/staff/management/"
+         class="inline-block mt-4 text-sm text-primary hover:underline">
+        View Management Profile →
+      </a>
+    </div>
+    {% endif %}
+
+    <!-- DOWNLOAD GUIDE -->
+    <div class="bg-primary text-white rounded-xl p-6">
+      <h3 class="font-semibold mb-2">
+        Admissions Guide
+      </h3>
+      <p class="text-sm text-green-100 mb-4">
+        Download the official admissions guide for detailed information.
+      </p>
+
+      <a href="#"
+         class="inline-block bg-white text-primary px-4 py-2 rounded-md text-sm font-medium hover:bg-green-50">
+        Download PDF
+      </a>
+    </div>
+
+  </aside>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Academics | NasCOHST{% endblock %}
+
+{% block content %}
+
+<!-- PAGE INTRO -->
+<section class="mb-14">
+  <h1 class="text-3xl md:text-4xl font-bold mb-4">
+    Schools & Academic Programmes
+  </h1>
+  <p class="text-gray-600 max-w-3xl text-lg">
+    Explore our schools and accredited programmes designed to prepare students
+    for professional practice in health sciences and technology.
+  </p>
+</section>
+
+<!-- SCHOOLS GRID -->
+<section class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+  {% for school in schools %}
+  <div class="bg-white rounded-xl shadow-sm p-8 flex flex-col justify-between">
+    <div>
+      <!-- Icon -->
+      <div class="h-12 w-12 flex items-center justify-center rounded-full bg-green-50 text-primary mb-4">
+        <!-- Academic cap icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 14l9-5-9-5-9 5 9 5z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 14l6.16-3.422A12.083 12.083 0 0112 21
+                   12.083 12.083 0 015.84 10.578L12 14z"/>
+        </svg>
+      </div>
+
+      <h2 class="text-xl font-semibold mb-3">
+        {{ school.name }}
+      </h2>
+
+      <p class="text-sm text-gray-600 mb-4">
+        {{ school.description|truncatewords:25 }}
+      </p>
+
+      {% if school.dean %}
+      <p class="text-sm text-gray-500">
+        <strong>Dean:</strong> {{ school.dean.name }}
+      </p>
+      {% endif %}
+    </div>
+
+    <a href="{% url 'school_detail' school.pk %}"
+       class="mt-6 inline-flex items-center text-primary font-medium hover:underline">
+      View Programmes →
+    </a>
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}{{ school.name }} | Academics{% endblock %}
+
+{% block content %}
+
+<!-- SCHOOL HEADER -->
+<section class="mb-14">
+  <h1 class="text-3xl md:text-4xl font-bold mb-3">
+    {{ school.name }}
+  </h1>
+
+  {% if school.description %}
+  <p class="text-gray-600 max-w-3xl text-lg">
+    {{ school.description }}
+  </p>
+  {% endif %}
+
+  {% if school.dean %}
+  <p class="mt-4 text-sm text-gray-500">
+    <strong>Dean of School:</strong> {{ school.dean.name }}
+  </p>
+  {% endif %}
+</section>
+
+<!-- PROGRAMMES -->
+<section class="space-y-16">
+
+  <!-- PROFESSIONAL DIPLOMA -->
+  {% if programmes_pd %}
+  <div>
+    <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+      <span class="text-primary">■</span> Professional Diploma (PD)
+    </h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for programme in programmes_pd %}
+      <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+        <a href="{% url 'programme_detail' programme.id %}"
+           class="font-medium text-primary hover:underline">
+          {{ programme.name }}
+        </a>
+
+        <span class="inline-block mt-3 text-xs text-green-700 bg-green-100 px-2 py-1 rounded">
+          NBTE Accredited
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- NATIONAL DIPLOMA -->
+  {% if programmes_nd %}
+  <div>
+    <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+      <span class="text-primary">■</span> National Diploma (ND)
+    </h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for programme in programmes_nd %}
+      <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+        <a href="{% url 'programme_detail' programme.id %}"
+           class="font-medium text-primary hover:underline">
+          {{ programme.name }}
+        </a>
+
+        <span class="inline-block mt-3 text-xs text-green-700 bg-green-100 px-2 py-1 rounded">
+          NBTE Accredited
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- HIGHER NATIONAL DIPLOMA -->
+  {% if programmes_hnd %}
+  <div>
+    <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+      <span class="text-primary">■</span> Higher National Diploma (HND)
+    </h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for programme in programmes_hnd %}
+      <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+        <a href="{% url 'programme_detail' programme.id %}"
+           class="font-medium text-primary hover:underline">
+          {{ programme.name }}
+        </a>
+
+        <span class="inline-block mt-3 text-xs text-green-700 bg-green-100 px-2 py-1 rounded">
+          NBTE Accredited
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</section>
+
+{% endblock %}

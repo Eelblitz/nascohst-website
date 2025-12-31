@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}{{ programme.name }} | Academics{% endblock %}
+
+{% block content %}
+
+<!-- PROGRAMME HEADER -->
+<section class="mb-14">
+  <h1 class="text-3xl md:text-4xl font-bold mb-3">
+    {{ programme.name }}
+  </h1>
+
+  <p class="text-gray-600 text-lg">
+    <strong>Level:</strong> {{ programme.get_level_display }}
+  </p>
+</section>
+
+<!-- PROGRAMME OVERVIEW -->
+{% if programme.description %}
+<section class="mb-12 max-w-4xl">
+  <h2 class="text-2xl font-semibold mb-4">
+    Programme Overview
+  </h2>
+  <p class="text-gray-700 leading-relaxed">
+    {{ programme.description }}
+  </p>
+</section>
+{% endif %}
+
+<!-- PROGRAMME DETAILS -->
+<section class="grid md:grid-cols-2 gap-10 mb-16">
+
+  {% if programme.duration %}
+  <div class="bg-white p-6 rounded-xl shadow-sm">
+    <h3 class="font-semibold mb-2">
+      Duration
+    </h3>
+    <p class="text-gray-700">
+      {{ programme.duration }}
+    </p>
+  </div>
+  {% endif %}
+
+  {% if programme.certification %}
+  <div class="bg-white p-6 rounded-xl shadow-sm">
+    <h3 class="font-semibold mb-2">
+      Certification Awarded
+    </h3>
+    <p class="text-gray-700">
+      {{ programme.certification }}
+    </p>
+  </div>
+  {% endif %}
+
+</section>
+
+<!-- ENTRY REQUIREMENTS -->
+{% if programme.entry_requirements %}
+<section class="mb-16 max-w-4xl">
+  <h2 class="text-2xl font-semibold mb-4">
+    Entry Requirements
+  </h2>
+  {% if programme.level == 'ND' %}
+<p class="text-sm text-gray-500 mb-4">
+  National Diploma admissions are conducted in line with JAMB and NBTE guidelines.
+</p>
+{% endif %}
+{% if programme.level == 'HND' %}
+<p class="text-sm text-gray-500 mb-4">
+  Higher National Diploma admissions are subject to NBTE regulations and institutional guidelines.
+</p>
+{% endif %}
+
+  <p class="text-gray-700 leading-relaxed">
+    {{ programme.entry_requirements }}
+  </p>
+</section>
+{% endif %}
+
+<!-- CAREER PROSPECTS -->
+{% if programme.career_prospects %}
+<section class="mb-20 max-w-4xl">
+  <h2 class="text-2xl font-semibold mb-4">
+    Career Prospects
+  </h2>
+  <p class="text-gray-700 leading-relaxed">
+    {{ programme.career_prospects }}
+  </p>
+</section>
+{% endif %}
+
+<!-- ADMISSIONS CTA -->
+<section class="bg-soft border border-gray-200 rounded-xl p-8 text-center max-w-4xl mx-auto">
+  <h3 class="text-xl font-semibold mb-3">
+    Interested in this Programme?
+  </h3>
+
+  <p class="text-gray-600 mb-6">
+    Admission into this programme is subject to meeting the College and
+    regulatory entry requirements.
+  </p>
+
+  <div class="flex flex-wrap justify-center gap-4">
+    <a href="/about/"
+       class="bg-primary text-white px-6 py-3 rounded-md font-medium hover:bg-green-800 transition">
+      View Admission Guidelines
+    </a>
+
+    <a href="/academics/"
+       class="border border-primary text-primary px-6 py-3 rounded-md font-medium hover:bg-green-50 transition">
+      Explore Other Programmes
+    </a>
+  </div>
+</section>
+
+{% endblock %}

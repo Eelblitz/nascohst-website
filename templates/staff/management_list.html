@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Management | NasCOHST{% endblock %}
+
+{% block content %}
+
+<!-- PAGE INTRO -->
+<section class="mb-16">
+  <h1 class="text-3xl md:text-4xl font-bold mb-4">
+    College Management
+  </h1>
+  <p class="text-gray-600 max-w-3xl text-lg">
+    The leadership team responsible for academic direction, administration,
+    and financial stewardship of the College.
+  </p>
+</section>
+
+<!-- MANAGEMENT GRID -->
+<section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+  {% for staff in management %}
+  <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+    {% if staff.photo %}
+    <img src="{{ staff.photo.url }}"
+         alt="Photo of {{ staff.name }}"
+         class="w-36 h-36 mx-auto rounded-full object-cover mb-4">
+    {% else %}
+    <div class="w-36 h-36 mx-auto rounded-full bg-gray-100 mb-4"></div>
+    {% endif %}
+
+    <h3 class="font-semibold text-lg">{{ staff.name }}</h3>
+    <p class="text-primary font-medium text-sm mt-1">
+      {{ staff.designation }}
+    </p>
+
+    {% if staff.qualifications %}
+    <p class="text-xs text-gray-500 mt-2">
+      {{ staff.qualifications }}
+    </p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

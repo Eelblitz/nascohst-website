@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}Staff Registration | NasCOHST{% endblock %}
+
+{% block content %}
+
+<section class="max-w-4xl mx-auto">
+
+  <!-- PAGE HEADER -->
+  <div class="text-center mb-12">
+    <h1 class="text-3xl md:text-4xl font-bold mb-3">
+      Staff Registration
+    </h1>
+    <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+      This form is for staff members of the College to submit their details
+      for verification and administrative approval.
+    </p>
+  </div>
+
+  <!-- NOTICE -->
+  <div class="bg-green-50 border border-green-200 rounded-lg p-5 mb-10">
+    <p class="text-sm text-green-900">
+      <strong>Important:</strong> Submitted profiles will only appear on the
+      College website after approval by the administration.
+    </p>
+  </div>
+
+  <!-- FORM CONTAINER -->
+  <div class="bg-white rounded-2xl shadow-lg p-10">
+
+    <!-- STEP INDICATOR -->
+    <div class="flex justify-between mb-10 text-sm font-medium">
+      <span id="stepAccount" class="text-primary">1. Account Information</span>
+      <span id="stepProfile" class="text-gray-400">2. Staff Profile</span>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- STEP 1: ACCOUNT -->
+      <div id="accountStep" class="space-y-6">
+
+        <div>
+          <label class="block text-sm font-medium mb-1">
+            Username
+          </label>
+          {{ user_form.username }}
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">
+            Email Address
+          </label>
+          {{ user_form.email }}
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">
+            Password
+          </label>
+          <div class="relative">
+            {{ user_form.password }}
+            <button type="button"
+                    onclick="togglePassword()"
+                    class="absolute right-3 top-2 text-xs text-gray-500 hover:text-primary">
+              Show
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-6">
+          <button type="button"
+                  onclick="goToProfile()"
+                  class="bg-primary text-white px-6 py-3 rounded-md font-medium hover:bg-green-800 transition">
+            Continue →
+          </button>
+        </div>
+
+      </div>
+
+      <!-- STEP 2: PROFILE -->
+      <div id="profileStep" class="space-y-6 hidden">
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium mb-1">
+              Full Name
+            </label>
+            {{ profile_form.name }}
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">
+              Designation
+            </label>
+            {{ profile_form.designation }}
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">
+              Department
+            </label>
+            {{ profile_form.department }}
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">
+              Staff Category
+            </label>
+            {{ profile_form.category }}
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">
+            Qualifications
+          </label>
+          {{ profile_form.qualifications }}
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">
+            Short Biography
+          </label>
+          {{ profile_form.biography }}
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">
+            Upload Photo
+          </label>
+          {{ profile_form.photo }}
+        </div>
+
+        <div class="pt-6 flex justify-between items-center">
+          <button type="button"
+                  onclick="goBack()"
+                  class="text-gray-500 hover:underline">
+            ← Back
+          </button>
+
+          <button type="submit"
+                  class="bg-primary text-white px-8 py-3 rounded-md font-medium hover:bg-green-800 transition">
+            Submit for Approval
+          </button>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</section>
+
+<!-- JAVASCRIPT -->
+<script>
+  function goToProfile() {
+    document.getElementById('accountStep').classList.add('hidden');
+    document.getElementById('profileStep').classList.remove('hidden');
+
+    document.getElementById('stepAccount').classList.remove('text-primary');
+    document.getElementById('stepAccount').classList.add('text-gray-400');
+
+    document.getElementById('stepProfile').classList.remove('text-gray-400');
+    document.getElementById('stepProfile').classList.add('text-primary');
+  }
+
+  function goBack() {
+    document.getElementById('profileStep').classList.add('hidden');
+    document.getElementById('accountStep').classList.remove('hidden');
+
+    document.getElementById('stepProfile').classList.remove('text-primary');
+    document.getElementById('stepProfile').classList.add('text-gray-400');
+
+    document.getElementById('stepAccount').classList.remove('text-gray-400');
+    document.getElementById('stepAccount').classList.add('text-primary');
+  }
+
+  function togglePassword() {
+    const field = document.querySelector('input[type="password"]');
+    field.type = field.type === 'password' ? 'text' : 'password';
+  }
+</script>
+
+{% endblock %}

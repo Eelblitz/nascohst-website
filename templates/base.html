@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}NasCOHST{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          extend: {
+            colors: {
+              primary: '#0F5D3B',
+              accent: '#D4AF37',
+              charcoal: '#1F2937',
+              soft: '#F8FAFC',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+  h1 { line-height: 1.2; }
+  h2 { line-height: 1.3; }
+  h3 { line-height: 1.4; }
+  p  { line-height: 1.7; }
+</style>
+
+</head>
+
+<body class="bg-soft text-charcoal">
+
+<!-- Header -->
+<header class="bg-primary sticky top-0 z-50 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <img src="/static/logo.jpg" alt="NasCOHST Logo"
+           class="h-10 w-auto bg-white rounded p-1">
+      <div class="leading-tight">
+        <p class="font-semibold text-sm text-white">
+          Nasarawa State College of Health Sciences
+        </p>
+        <p class="text-xs text-green-100">Keffi</p>
+      </div>
+    </div>
+<button onclick="openSearch()"
+        class="text-white hover:text-accent focus:outline-none"
+        aria-label="Search site">
+  🔍
+</button>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex gap-6 text-sm font-medium text-white">
+      <a href="/" class="hover:text-accent">Home</a>
+      <a href="/about/" class="hover:text-accent">About</a>
+      <a href="/academics/" class="hover:text-accent">Academics</a>
+      <a href="/staff/" class="hover:text-accent">Staff</a>
+      <a href="/news/" class="hover:text-accent">Today's News</a>
+      <a href="/contact/" class="hover:text-accent">Contact</a>
+    </nav>
+
+    <!-- Mobile Button -->
+    <button onclick="toggleMenu()"
+            class="md:hidden text-white focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+           fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu"
+       class="hidden md:hidden bg-primary border-t border-green-700">
+    <nav class="px-4 py-6 space-y-4 text-white text-sm">
+      <a href="/" class="block hover:text-accent">Home</a>
+      <a href="/about/" class="block hover:text-accent">About</a>
+      <a href="/academics/" class="block hover:text-accent">Academics</a>
+      <a href="/staff/" class="block hover:text-accent">Staff</a>
+      <a href="/news/" class="block hover:text-accent">Today's News</a>
+      <a href="/contact/" class="block hover:text-accent">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('hidden');
+  }
+</script>
+
+
+<!-- Main -->
+<main class="max-w-7xl mx-auto px-4 py-12">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- Footer -->
+<footer class="bg-charcoal text-gray-300">
+  <div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-8 text-sm">
+    <div>
+      <p class="font-semibold text-white mb-2">NasCOHST</p>
+      <p>Empowering Tomorrow’s Health Professionals, Today.</p>
+    </div>
+
+    <div>
+      <p class="font-semibold text-white mb-2">Quick Links</p>
+      <ul class="space-y-1">
+        <li><a href="/academics/" class="hover:underline">Academics</a></li>
+        <li><a href="/staff/" class="hover:underline">Staff</a></li>
+        <li><a href="/news/" class="hover:underline">News</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="font-semibold text-white mb-2">Contact</p>
+      <p>Keffi, Nasarawa State</p>
+      <p>dmo@nascohst.com.ng</p>
+      <p>info@nascohst.edu.ng</p>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-gray-400 pb-4">
+    © {{ year|default:2025 }} Made by Mohammed Isah Attah. All rights reserved.
+  </div>
+</footer>
+<style>
+  .card-hover {
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  }
+</style>
+<!-- SEARCH MODAL -->
+<div id="searchModal"
+     class="fixed inset-0 bg-black/40 hidden z-50 flex items-start justify-center">
+
+  <div class="bg-white mt-24 w-full max-w-2xl rounded-xl shadow-lg p-6">
+
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="font-semibold text-lg">Search the site</h2>
+      <button onclick="closeSearch()" class="text-gray-500 hover:text-black">
+        ✕
+      </button>
+    </div>
+
+    <input type="text"
+           id="searchInput"
+           placeholder="Search staff, programmes, news…"
+           class="w-full border rounded-md px-4 py-3 focus:ring-2 focus:ring-primary">
+
+    <div id="searchResults"
+         class="mt-6 space-y-3 text-sm text-gray-700">
+      <p class="text-gray-500">Start typing to search…</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openSearch() {
+    document.getElementById('searchModal').classList.remove('hidden');
+    document.getElementById('searchInput').focus();
+  }
+
+  function closeSearch() {
+    document.getElementById('searchModal').classList.add('hidden');
+  }
+
+  // Example data hooks (we’ll wire real data next)
+  const SEARCH_DATA = [
+    // These will be injected dynamically later
+  ];
+
+  document.getElementById('searchInput')?.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    const resultsBox = document.getElementById('searchResults');
+
+    if (!query) {
+      resultsBox.innerHTML = '<p class="text-gray-500">Start typing to search…</p>';
+      return;
+    }
+
+    const results = SEARCH_DATA.filter(item =>
+      item.label.toLowerCase().includes(query)
+    );
+
+    if (!results.length) {
+      resultsBox.innerHTML = '<p class="text-gray-500">No results found.</p>';
+      return;
+    }
+resultsBox.innerHTML = results.map(item => `
+  <a href="${item.url}"
+     class="block px-3 py-2 rounded hover:bg-gray-100 transition">
+    ${item.label}
+  </a>
+`).join('');
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Staff | NasCOHST{% endblock %}
+
+{% block content %}
+
+<!-- PAGE INTRO -->
+<section class="mb-14">
+  <h1 class="text-3xl md:text-4xl font-bold mb-4">
+    Our Staff
+  </h1>
+  <p class="text-gray-600 max-w-3xl text-lg">
+    Meet our dedicated academic and non-academic staff who support teaching,
+    learning, and administration across the College.
+  </p>
+</section>
+<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-10">
+  <p class="text-sm">
+    Are you a staff member of the College and not yet listed?
+    <a href="/staff/register/" class="font-semibold text-blue-700 hover:underline">
+      Submit your profile for approval.
+    </a>
+  </p>
+</div>
+
+
+<!-- ACADEMIC STAFF -->
+<section class="mb-20">
+  <h2 class="text-2xl font-semibold mb-8">
+    Academic Staff
+  </h2>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for staff in academic_staff %}
+    <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+      {% if staff.photo %}
+      <img src="{{ staff.photo.url }}"
+           alt="Photo of {{ staff.name }}"
+           class="w-32 h-32 mx-auto rounded-full object-cover mb-4">
+      {% else %}
+      <div class="w-32 h-32 mx-auto rounded-full bg-gray-100 mb-4"></div>
+      {% endif %}
+
+      <h3 class="font-semibold text-lg">{{ staff.name }}</h3>
+      <p class="text-sm text-gray-600">{{ staff.designation }}</p>
+
+      {% if staff.department %}
+      <p class="text-xs text-gray-500 mt-1">{{ staff.department }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- NON-ACADEMIC STAFF -->
+<section>
+  <h2 class="text-2xl font-semibold mb-8">
+    Non-Academic Staff
+  </h2>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for staff in non_academic_staff %}
+    <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+      {% if staff.photo %}
+      <img src="{{ staff.photo.url }}"
+           alt="Photo of {{ staff.name }}"
+           class="w-28 h-28 mx-auto rounded-full object-cover mb-4">
+      {% else %}
+      <div class="w-28 h-28 mx-auto rounded-full bg-gray-100 mb-4"></div>
+      {% endif %}
+
+      <h3 class="font-semibold">{{ staff.name }}</h3>
+      <p class="text-sm text-gray-600">{{ staff.designation }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

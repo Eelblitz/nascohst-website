@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block title %}Home | NasCOHST{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<!-- HERO -->
+<section class="grid md:grid-cols-2 gap-12 items-center mb-20">
+  <div>
+    <span class="text-sm uppercase tracking-wide text-primary font-semibold">
+      Nasarawa State College of Health Sciences & Technology
+    </span>
+
+    <h1 class="text-4xl md:text-5xl font-bold leading-tight mt-4">
+      Empowering Tomorrow’s <br>
+      <span class="text-primary">Health Professionals</span>, Today
+    </h1>
+
+    <p class="mt-6 text-gray-600 text-lg">
+      A leading institution committed to excellence in health sciences education,
+      professional training, and community health impact.
+    </p>
+
+    <div class="mt-8 flex flex-wrap gap-4">
+      <a href="/academics/"
+         class="bg-primary text-white px-6 py-3 rounded-md font-medium hover:bg-green-800 transition">
+        View Programmes
+      </a>
+      <a href="/about/"
+         class="border border-primary text-primary px-6 py-3 rounded-md font-medium hover:bg-green-50 transition">
+        Learn More
+      </a>
+    </div>
+  </div>
+
+  <!-- Visual Accent / Placeholder -->
+  <div class="bg-white rounded-xl shadow-sm p-10 text-center">
+    <p class="text-3xl font-bold text-primary mb-2">11+</p>
+    <p class="text-gray-600">
+      Accredited Diploma & Higher Diploma Programmes
+    </p>
+
+    <div class="mt-6 text-sm text-gray-500">
+      Fully accredited by NBTE and relevant professional bodies
+    </div>
+  </div>
+</section>
+
+
+<!-- VALUE STRIP -->
+<section class="grid md:grid-cols-3 gap-6 mb-20">
+  <div class="bg-white p-6 rounded-xl shadow-sm">
+    <p class="font-semibold mb-2">NBTE Accredited</p>
+    <p class="text-sm text-gray-600">
+      All academic programmes are fully accredited by NBTE.
+    </p>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl shadow-sm">
+    <p class="font-semibold mb-2">Modern Facilities</p>
+    <p class="text-sm text-gray-600">
+      Laboratories, ICT centers, and learning spaces designed for excellence.
+    </p>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl shadow-sm">
+    <p class="font-semibold mb-2">Student-Focused</p>
+    <p class="text-sm text-gray-600">
+      Practical training that prepares graduates for real-world healthcare.
+    </p>
+  </div>
+</section>
+<!-- AT A GLANCE -->
+<section class="mb-20">
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+    <!-- Founded -->
+    <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+      <p class="text-3xl font-bold text-primary mb-1">1999</p>
+      <p class="text-sm text-gray-600">
+        Year Established
+      </p>
+    </div>
+
+    <!-- Programmes -->
+    <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+      <p class="text-3xl font-bold text-primary mb-1">13</p>
+      <p class="text-sm text-gray-600">
+        Accredited Programmes
+      </p>
+      <p class="text-xs text-gray-500 mt-1">
+        2 PD · 8 ND· 3 HND
+      </p>
+    </div>
+
+    <!-- Accreditation -->
+    <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+      <p class="text-3xl font-bold text-primary mb-1">100%</p>
+      <p class="text-sm text-gray-600">
+        NBTE Accredited
+      </p>
+    </div>
+
+    <!-- Focus -->
+    <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+      <p class="text-3xl font-bold text-primary mb-1">Health</p>
+      <p class="text-sm text-gray-600">
+        Sciences & Technology
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ABOUT SUMMARY -->
+  <div class="max-w-4xl mx-auto text-center">
+    <p class="text-gray-700 text-lg leading-relaxed mb-6">
+      Established in 1999 and strengthened through successive legislation,
+      Nasarawa State College of Health Sciences and Technology, Keffi has evolved
+      into a full-fledged College offering accredited National and Higher
+      National Diploma programmes. The institution prepares skilled health
+      professionals to serve effectively in primary and secondary healthcare
+      facilities across Nigeria.
+    </p>
+
+    <a href="/about/"
+       class="inline-flex items-center text-primary font-medium hover:underline">
+      Learn more about the College →
+    </a>
+  </div>
+<a href="/admissions/"
+   class="border border-primary text-primary px-6 py-3 rounded-md font-medium hover:bg-green-50">
+  Admission Guide
+</a>
+
+</section>
+<!-- COLLEGE MANAGEMENT -->
+<section class="mb-20">
+
+  <div class="text-center mb-10">
+    <h2 class="text-2xl font-semibold mb-2">
+      College Management
+    </h2>
+    <p class="text-gray-600">
+      The leadership team responsible for academic, administrative,
+      and financial oversight of the College.
+    </p>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
+
+    {% for staff in management_staff %}
+    <div class="bg-white rounded-xl shadow-sm p-6 text-center card-hover">
+      <div class="w-28 h-28 mx-auto rounded-full bg-gray-100 mb-4 overflow-hidden">
+        {% if staff.photo %}
+          <img src="{{ staff.photo.url }}"
+               alt="Photo of {{ staff.name }}"
+               class="w-full h-full object-cover">
+        {% endif %}
+      </div>
+
+      <h3 class="font-semibold">{{ staff.name }}</h3>
+      <p class="text-primary text-sm mt-1">
+        {{ staff.designation }}
+      </p>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="text-center mt-10">
+    <a href="/staff/management/"
+       class="inline-flex items-center text-primary font-medium hover:underline">
+      View full management team →
+    </a>
+  </div>
+
+</section>
+
+
+{% endblock %}

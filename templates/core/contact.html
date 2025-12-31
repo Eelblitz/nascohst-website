@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-6">Contact Us</h2>
+
+<div class="grid md:grid-cols-2 gap-8">
+
+    <div>
+        <h3 class="text-lg font-semibold mb-2">College Address</h3>
+        <p>
+            <b>Main Campus</b>
+            <br>
+            Along Keffi-Abuja ExpressWay, Keffi, Nasarawa State
+        </p>
+         <p>
+            <b>City Campus</b><br>
+
+            Along Old Nasarawa Road Keffi, Nasarawa State
+        </p>
+
+        <h3 class="text-lg font-semibold mt-6 mb-2">Email</h3>
+        <p>info@nascohst.edu.ng</p>
+
+        <h3 class="text-lg font-semibold mt-6 mb-2">Phone</h3>
+        <p>+234 7088880704</p>
+    </div>
+
+    <div>
+        <h3 class="text-lg font-semibold mb-4">Send us a message</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Your Name"
+                   class="w-full mb-3 p-2 border rounded">
+
+            <input type="email" name="email" placeholder="Your Email"
+                   class="w-full mb-3 p-2 border rounded">
+
+            <textarea name="message" rows="4" placeholder="Your Message"
+                      class="w-full mb-3 p-2 border rounded"></textarea>
+
+            <button type="submit"
+                    class="bg-green-800 text-white px-4 py-2 rounded">
+                Send Message
+            </button>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}
