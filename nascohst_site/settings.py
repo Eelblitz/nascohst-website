@@ -18,7 +18,7 @@ SECRET_KEY = os.environ.get(
                             )
 
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'nascohst-website.onrender.com',
