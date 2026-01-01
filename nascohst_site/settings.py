@@ -20,9 +20,8 @@ if not SECRET_KEY:
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'nascohst.com.ng',
-    'www.nascohst.com.ng',
     'nascohst-website.onrender.com',
+    '.onrender.com',
 ]
 
 
