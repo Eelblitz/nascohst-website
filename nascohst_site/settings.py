@@ -12,10 +12,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --------------------------------------------------
 
 # SECRET KEY (MUST be set in cPanel environment variables)
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "unsafe-fallback-key-only-for-emergency"
+                            )
 
-if not SECRET_KEY:
-    raise RuntimeError("DJANGO_SECRET_KEY environment variable not set")
 
 DEBUG = False
 
