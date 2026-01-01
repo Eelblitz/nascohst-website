@@ -87,3 +87,12 @@ def admissions(request):
         'admissions_officer': admissions_officer,
         'year': datetime.now().year,
     })
+
+def privacy_policy(request):
+    return render(request, 'core/privacy_policy.html')
+
+def terms_of_use(request):
+    return render(request, 'core/terms_of_use.html')
+
+def admissions_disclaimer(request):
+    return render(request, 'core/admissions_disclaimer.html')
