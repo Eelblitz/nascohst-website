@@ -19,7 +19,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError("DJANGO_SECRET_KEY environment variable not set")
 
-DEBUG = False  # MUST be False in production
+DEBUG = True  # MUST be False in production
 
 ALLOWED_HOSTS = [
     "nascohst.com.ng",
