@@ -22,9 +22,16 @@ SECRET_KEY = os.environ.get(
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'nascohst-website.onrender.com',
-    '.onrender.com',
+    "nascohst.com.ng",
+    "www.nascohst.com.ng",
+    "nascohst-website.onrender.com",
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://nascohst.com.ng",
+    "https://www.nascohst.com.ng",
+    "https://nascohst-website.onrender.com",
+]
+
 
 
 # --------------------------------------------------
