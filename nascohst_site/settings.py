@@ -19,7 +19,7 @@ SECRET_KEY = os.environ.get(
                             )
 
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "nascohst.com.ng",
