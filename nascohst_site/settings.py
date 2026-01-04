@@ -19,7 +19,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError("DJANGO_SECRET_KEY environment variable not set")
 
-DEBUG = True
+DEBUG = False  # MUST be False in production
 
 ALLOWED_HOSTS = [
     "nascohst.com.ng",
@@ -33,7 +33,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.nascohst.com.ng",
     "https://nascohst-website.onrender.com",
 ]
-
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
@@ -114,15 +113,8 @@ TEMPLATES = [
 # --------------------------------------------------
 # DATABASE
 # --------------------------------------------------
-# PostgreSQL on Render via DATABASE_URL
-# SQLite fallback for local development
-
-# --------------------------------------------------
-# DATABASE CONFIGURATION
-# --------------------------------------------------
 
 if os.getenv("DATABASE_URL"):
-    # Production (Render / PostgreSQL)
     DATABASES = {
         'default': dj_database_url.config(
             conn_max_age=600,
@@ -130,13 +122,13 @@ if os.getenv("DATABASE_URL"):
         )
     }
 else:
-    # Local development (SQLite)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
 
 # --------------------------------------------------
 # PASSWORD VALIDATION
@@ -162,32 +154,41 @@ USE_TZ = True
 
 
 # --------------------------------------------------
-# STATIC FILES
+# STATIC & MEDIA FILES
 # --------------------------------------------------
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-# --------------------------------------------------
-# MEDIA FILES (Cloudinary)
-# --------------------------------------------------
-
 MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+}
 
 
 # --------------------------------------------------
 # CLOUDINARY CONFIGURATION
 # --------------------------------------------------
 
+CLOUDINARY_CLOUD_NAME = os.environ.get("CLOUDINARY_CLOUD_NAME")
+CLOUDINARY_API_KEY = os.environ.get("CLOUDINARY_API_KEY")
+CLOUDINARY_API_SECRET = os.environ.get("CLOUDINARY_API_SECRET")
+
+if not all([CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET]):
+    raise RuntimeError("Cloudinary environment variables are not fully set")
+
 cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    cloud_name=CLOUDINARY_CLOUD_NAME,
+    api_key=CLOUDINARY_API_KEY,
+    api_secret=CLOUDINARY_API_SECRET,
     secure=True
 )
 
@@ -213,8 +214,7 @@ SESSION_COOKIE_SECURE = True
 
 X_FRAME_OPTIONS = 'DENY'
 
-# Enable ONLY after confirming HTTPS stability
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
 
 
 # --------------------------------------------------
