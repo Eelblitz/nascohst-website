@@ -117,14 +117,26 @@ TEMPLATES = [
 # PostgreSQL on Render via DATABASE_URL
 # SQLite fallback for local development
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=not DEBUG,
-    )
-}
+# --------------------------------------------------
+# DATABASE CONFIGURATION
+# --------------------------------------------------
 
+if os.getenv("DATABASE_URL"):
+    # Production (Render / PostgreSQL)
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # Local development (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # --------------------------------------------------
 # PASSWORD VALIDATION
