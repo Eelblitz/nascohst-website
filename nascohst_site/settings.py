@@ -1,9 +1,12 @@
 from pathlib import Path
 import os
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # --------------------------------------------------
-# Base directory
+# BASE DIRECTORY
 # --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,28 +15,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # --------------------------------------------------
 
-# SECRET KEY (MUST be set in cPanel environment variables)
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "unsafe-fallback-key-only-for-emergency"
-                            )
-
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("DJANGO_SECRET_KEY environment variable not set")
 
 DEBUG = False
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 
 ALLOWED_HOSTS = [
     "nascohst.com.ng",
     "www.nascohst.com.ng",
     "nascohst-website.onrender.com",
+    ".onrender.com",
 ]
+
 CSRF_TRUSTED_ORIGINS = [
     "https://nascohst.com.ng",
     "https://www.nascohst.com.ng",
     "https://nascohst-website.onrender.com",
 ]
 
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 
 # --------------------------------------------------
@@ -48,6 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
+
+    # Media storage
+    'cloudinary',
+    'cloudinary_storage',
 
     # Local apps
     'core',
@@ -65,6 +72,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,7 +87,6 @@ MIDDLEWARE = [
 # --------------------------------------------------
 
 ROOT_URLCONF = 'nascohst_site.urls'
-
 WSGI_APPLICATION = 'nascohst_site.wsgi.application'
 
 
@@ -107,12 +114,14 @@ TEMPLATES = [
 # --------------------------------------------------
 # DATABASE
 # --------------------------------------------------
+# PostgreSQL on Render via DATABASE_URL
+# SQLite fallback for local development
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
-        ssl_require=True,
+        ssl_require=not DEBUG,
     )
 }
 
@@ -134,7 +143,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # --------------------------------------------------
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -142,23 +150,42 @@ USE_TZ = True
 
 
 # --------------------------------------------------
-# STATIC & MEDIA FILES
+# STATIC FILES
 # --------------------------------------------------
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+
+# --------------------------------------------------
+# MEDIA FILES (Cloudinary)
+# --------------------------------------------------
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 # --------------------------------------------------
-# DEFAULT PRIMARY KEY
+# CLOUDINARY CONFIGURATION
 # --------------------------------------------------
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True
+)
+
+
+# --------------------------------------------------
+# UPLOAD LIMITS
+# --------------------------------------------------
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024  # 2MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024
 
 
 # --------------------------------------------------
@@ -167,18 +194,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
+SECURE_REFERRER_POLICY = 'same-origin'
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-# Enable ONLY after SSL is confirmed working
-# SECURE_SSL_REDIRECT = True
-SECURE_REFERRER_POLICY = 'same-origin'
+X_FRAME_OPTIONS = 'DENY'
+
+# Enable ONLY after confirming HTTPS stability
+SECURE_SSL_REDIRECT = False
 
 
 # --------------------------------------------------
-# EMAIL CONFIGURATION (cPanel)
+# EMAIL CONFIGURATION
 # --------------------------------------------------
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -194,11 +222,9 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'NasCOHST <dmo@nascohst.com.ng>'
 ADMIN_EMAIL = 'dmo@nascohst.com.ng'
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://nascohst-website.onrender.com",
-    "https://www.nascohst-website.onrender.com",
-]
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SECURE_SSL_REDIRECT = False
+# --------------------------------------------------
+# DEFAULT PRIMARY KEY
+# --------------------------------------------------
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
