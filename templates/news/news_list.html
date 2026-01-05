@@ -37,11 +37,7 @@
       <p class="text-sm text-gray-600 mb-4">
         {{ item.content|truncatewords:22 }}
       </p>
-
-      <a href="{% url 'news_detail' item.pk %}"
-         class="text-primary font-medium text-sm hover:underline">
-        Read more →
-      </a>
+           <a href="{% url 'news:news_detail' news.id %}">Read more</a>
     </div>
   </article>
   {% endfor %}
