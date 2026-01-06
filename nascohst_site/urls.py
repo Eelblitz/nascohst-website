@@ -20,8 +20,8 @@ urlpatterns = [
     path('', include('core.urls')),
     path('staff/', include('staff.urls')),
     path('academics/', include('academics.urls')),
-    path('news/', include('news.urls', namespace='news')),
-    path('gallery/', include('gallery.urls', namespace='gallery')),
+    path('news/', include('news.urls')),
+    path('gallery/', include('gallery.urls')),
     path(
     'sitemap.xml',
     sitemap,
