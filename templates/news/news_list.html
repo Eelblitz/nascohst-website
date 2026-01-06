@@ -17,6 +17,7 @@
 <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
   {% for item in news_items %}
   <article class="bg-white rounded-xl shadow-sm overflow-hidden">
+
     {% if item.image %}
     <img src="{{ item.image.url }}"
          alt="{{ item.title }}"
@@ -37,7 +38,11 @@
       <p class="text-sm text-gray-600 mb-4">
         {{ item.content|truncatewords:22 }}
       </p>
-           <a href="{% url 'news:news_detail' news.id %}">Read more</a>
+
+      <a href="{% url 'news_detail' item.pk %}"
+         class="text-primary font-medium hover:underline">
+        Read more →
+      </a>
     </div>
   </article>
   {% endfor %}

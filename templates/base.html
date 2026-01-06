@@ -29,13 +29,13 @@
         }
       }
     </script>
-    <style>
-  h1 { line-height: 1.2; }
-  h2 { line-height: 1.3; }
-  h3 { line-height: 1.4; }
-  p  { line-height: 1.7; }
-</style>
 
+    <style>
+      h1 { line-height: 1.2; }
+      h2 { line-height: 1.3; }
+      h3 { line-height: 1.4; }
+      p  { line-height: 1.7; }
+    </style>
 </head>
 
 <body class="bg-soft text-charcoal">
@@ -55,11 +55,12 @@
         <p class="text-xs text-green-100">Keffi</p>
       </div>
     </div>
-<button onclick="openSearch()"
-        class="text-white hover:text-accent focus:outline-none"
-        aria-label="Search site">
-  🔍
-</button>
+
+    <button onclick="openSearch()"
+            class="text-white hover:text-accent focus:outline-none"
+            aria-label="Search site">
+      🔍
+    </button>
 
     <!-- Desktop Nav -->
     <nav class="hidden md:flex gap-6 text-sm font-medium text-white">
@@ -99,11 +100,9 @@
 
 <script>
   function toggleMenu() {
-    const menu = document.getElementById('mobileMenu');
-    menu.classList.toggle('hidden');
+    document.getElementById('mobileMenu').classList.toggle('hidden');
   }
 </script>
-
 
 <!-- Main -->
 <main class="max-w-7xl mx-auto px-4 py-12">
@@ -113,6 +112,7 @@
 <!-- Footer -->
 <footer class="bg-charcoal text-gray-300">
   <div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-8 text-sm">
+
     <div>
       <p class="font-semibold text-white mb-2">NasCOHST</p>
       <p>Empowering Tomorrow’s Health Professionals, Today.</p>
@@ -124,39 +124,27 @@
         <li><a href="/academics/" class="hover:underline">Academics</a></li>
         <li><a href="/staff/" class="hover:underline">Staff</a></li>
         <li><a href="/news/" class="hover:underline">News</a></li>
+        <li><a href="/gallery/" class="hover:underline">Gallery</a></li>
       </ul>
     </div>
 
-<ul class="space-y-1">
-  <li><a href="{% url 'privacy_policy' %}" class="hover:underline">Privacy Policy</a></li>
-  <li><a href="{% url 'terms_of_use' %}" class="hover:underline">Terms of Use</a></li>
-  <li><a href="{% url 'admissions_disclaimer' %}" class="hover:underline">Admissions Disclaimer</a></li>
-  <a href="{% url 'gallery:gallery' %}">Gallery</a>
-</ul>
-
-
     <div>
-      <p class="font-semibold text-white mb-2">Contact</p>
-      <p>Keffi, Nasarawa State</p>
-      <p>dmo@nascohst.com.ng</p>
-      <p>info@nascohst.edu.ng</p>
+      <p class="font-semibold text-white mb-2">Policies</p>
+      <ul class="space-y-1">
+        <li><a href="{% url 'privacy_policy' %}" class="hover:underline">Privacy Policy</a></li>
+        <li><a href="{% url 'terms_of_use' %}" class="hover:underline">Terms of Use</a></li>
+        <li><a href="{% url 'admissions_disclaimer' %}" class="hover:underline">Admissions Disclaimer</a></li>
+      </ul>
     </div>
+
   </div>
 
   <div class="text-center text-xs text-gray-400 pb-4">
-    © {{ year|default:2025 }} Made by Mohammed Isah Attah. All rights reserved.
+    © {{ year|default:2026 }} NasCOHST. All rights reserved.
   </div>
 </footer>
-<style>
-  .card-hover {
-    transition: transform .2s ease, box-shadow .2s ease;
-  }
-  .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.08);
-  }
-</style>
-<!-- SEARCH MODAL -->
+
+<!-- Search Modal -->
 <div id="searchModal"
      class="fixed inset-0 bg-black/40 hidden z-50 flex items-start justify-center">
 
@@ -164,9 +152,7 @@
 
     <div class="flex justify-between items-center mb-4">
       <h2 class="font-semibold text-lg">Search the site</h2>
-      <button onclick="closeSearch()" class="text-gray-500 hover:text-black">
-        ✕
-      </button>
+      <button onclick="closeSearch()" class="text-gray-500 hover:text-black">✕</button>
     </div>
 
     <input type="text"
@@ -191,38 +177,7 @@
   function closeSearch() {
     document.getElementById('searchModal').classList.add('hidden');
   }
-
-  // Example data hooks (we’ll wire real data next)
-  const SEARCH_DATA = [
-    // These will be injected dynamically later
-  ];
-
-  document.getElementById('searchInput')?.addEventListener('input', function () {
-    const query = this.value.toLowerCase();
-    const resultsBox = document.getElementById('searchResults');
-
-    if (!query) {
-      resultsBox.innerHTML = '<p class="text-gray-500">Start typing to search…</p>';
-      return;
-    }
-
-    const results = SEARCH_DATA.filter(item =>
-      item.label.toLowerCase().includes(query)
-    );
-
-    if (!results.length) {
-      resultsBox.innerHTML = '<p class="text-gray-500">No results found.</p>';
-      return;
-    }
-resultsBox.innerHTML = results.map(item => `
-  <a href="${item.url}"
-     class="block px-3 py-2 rounded hover:bg-gray-100 transition">
-    ${item.label}
-  </a>
-`).join('');
-
 </script>
-
 
 </body>
 </html>

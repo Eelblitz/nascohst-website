@@ -4,7 +4,6 @@
 {% block content %}
 
 <!-- HERO -->
-<!-- HERO -->
 <section class="grid md:grid-cols-2 gap-12 items-center mb-20">
   <div>
     <span class="text-sm uppercase tracking-wide text-primary font-semibold">
@@ -33,7 +32,6 @@
     </div>
   </div>
 
-  <!-- Visual Accent / Placeholder -->
   <div class="bg-white rounded-xl shadow-sm p-10 text-center">
     <p class="text-3xl font-bold text-primary mb-2">11+</p>
     <p class="text-gray-600">
@@ -45,7 +43,6 @@
     </div>
   </div>
 </section>
-
 
 <!-- VALUE STRIP -->
 <section class="grid md:grid-cols-3 gap-6 mb-20">
@@ -70,57 +67,39 @@
     </p>
   </div>
 </section>
+
 <!-- AT A GLANCE -->
 <section class="mb-20">
-
   <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 
-    <!-- Founded -->
     <div class="bg-white rounded-xl shadow-sm p-6 text-center">
       <p class="text-3xl font-bold text-primary mb-1">1999</p>
-      <p class="text-sm text-gray-600">
-        Year Established
-      </p>
+      <p class="text-sm text-gray-600">Year Established</p>
     </div>
 
-    <!-- Programmes -->
     <div class="bg-white rounded-xl shadow-sm p-6 text-center">
       <p class="text-3xl font-bold text-primary mb-1">13</p>
-      <p class="text-sm text-gray-600">
-        Accredited Programmes
-      </p>
-      <p class="text-xs text-gray-500 mt-1">
-        2 PD · 8 ND· 3 HND
-      </p>
+      <p class="text-sm text-gray-600">Accredited Programmes</p>
+      <p class="text-xs text-gray-500 mt-1">2 PD · 8 ND · 3 HND</p>
     </div>
 
-    <!-- Accreditation -->
     <div class="bg-white rounded-xl shadow-sm p-6 text-center">
       <p class="text-3xl font-bold text-primary mb-1">100%</p>
-      <p class="text-sm text-gray-600">
-        NBTE Accredited
-      </p>
+      <p class="text-sm text-gray-600">NBTE Accredited</p>
     </div>
 
-    <!-- Focus -->
     <div class="bg-white rounded-xl shadow-sm p-6 text-center">
       <p class="text-3xl font-bold text-primary mb-1">Health</p>
-      <p class="text-sm text-gray-600">
-        Sciences & Technology
-      </p>
+      <p class="text-sm text-gray-600">Sciences & Technology</p>
     </div>
-
   </div>
 
-  <!-- ABOUT SUMMARY -->
   <div class="max-w-4xl mx-auto text-center">
     <p class="text-gray-700 text-lg leading-relaxed mb-6">
       Established in 1999 and strengthened through successive legislation,
       Nasarawa State College of Health Sciences and Technology, Keffi has evolved
       into a full-fledged College offering accredited National and Higher
-      National Diploma programmes. The institution prepares skilled health
-      professionals to serve effectively in primary and secondary healthcare
-      facilities across Nigeria.
+      National Diploma programmes.
     </p>
 
     <a href="/about/"
@@ -128,19 +107,20 @@
       Learn more about the College →
     </a>
   </div>
-<a href="/admissions/"
-   class="border border-primary text-primary px-6 py-3 rounded-md font-medium hover:bg-green-50">
-  Admission Guide
-</a>
 
+  <div class="text-center mt-8">
+    <a href="/admissions/"
+       class="border border-primary text-primary px-6 py-3 rounded-md font-medium hover:bg-green-50">
+      Admission Guide
+    </a>
+  </div>
 </section>
+
 <!-- COLLEGE MANAGEMENT -->
 <section class="mb-20">
 
   <div class="text-center mb-10">
-    <h2 class="text-2xl font-semibold mb-2">
-      College Management
-    </h2>
+    <h2 class="text-2xl font-semibold mb-2">College Management</h2>
     <p class="text-gray-600">
       The leadership team responsible for academic, administrative,
       and financial oversight of the College.
@@ -148,7 +128,6 @@
   </div>
 
   <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-
     {% for staff in management_staff %}
     <div class="bg-white rounded-xl shadow-sm p-6 text-center card-hover">
       <div class="w-28 h-28 mx-auto rounded-full bg-gray-100 mb-4 overflow-hidden">
@@ -160,12 +139,9 @@
       </div>
 
       <h3 class="font-semibold">{{ staff.name }}</h3>
-      <p class="text-primary text-sm mt-1">
-        {{ staff.designation }}
-      </p>
+      <p class="text-primary text-sm mt-1">{{ staff.designation }}</p>
     </div>
     {% endfor %}
-
   </div>
 
   <div class="text-center mt-10">
@@ -174,8 +150,14 @@
       View full management team →
     </a>
   </div>
-<a href="{% url 'gallery:gallery' %}">Gallery</a>
-</section>
 
+  <div class="text-center mt-6">
+    <a href="/gallery/"
+       class="inline-flex items-center text-primary font-medium hover:underline">
+      View Gallery →
+    </a>
+  </div>
+
+</section>
 
 {% endblock %}
