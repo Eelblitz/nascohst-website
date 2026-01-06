@@ -3,6 +3,6 @@ from .models import GalleryImage
 
 def gallery_view(request):
     images = GalleryImage.objects.all()
-    return render(request, 'gallery/gallery.html', {
+    return render(request, 'gallery/gallery_list.html', {
         'images': images
     })
