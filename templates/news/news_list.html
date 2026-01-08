@@ -3,7 +3,6 @@
 
 {% block content %}
 
-<!-- PAGE INTRO -->
 <section class="mb-14">
   <h1 class="text-3xl md:text-4xl font-bold mb-4">
     News & Updates
@@ -13,7 +12,6 @@
   </p>
 </section>
 
-<!-- NEWS GRID -->
 <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
   {% for item in news_items %}
   <article class="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -30,7 +28,7 @@
       </p>
 
       <h2 class="font-semibold text-lg mb-3">
-        <a href="{% url 'news_detail' item.pk %}" class="hover:underline">
+        <a href="{% url 'news:news_detail' item.pk %}" class="hover:underline">
           {{ item.title }}
         </a>
       </h2>
@@ -39,12 +37,14 @@
         {{ item.content|truncatewords:22 }}
       </p>
 
-      <a href="{% url 'news_detail' item.pk %}"
+      <a href="{% url 'news:news_detail' item.pk %}"
          class="text-primary font-medium hover:underline">
         Read more →
       </a>
     </div>
   </article>
+  {% empty %}
+    <p>No news articles have been published yet.</p>
   {% endfor %}
 </section>
 

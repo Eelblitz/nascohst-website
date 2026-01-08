@@ -4,23 +4,24 @@ from .models import News
 
 
 def news_list(request):
-    news = News.objects.filter(
+    news_items = News.objects.filter(
         published_at__isnull=False,
         published_at__lte=now()
     ).order_by('-published_at')
 
     return render(request, 'news/news_list.html', {
-        'news': news
+        'news_items': news_items
     })
 
 
 def news_detail(request, pk):
-    item = get_object_or_404(
+    news = get_object_or_404(
         News,
         pk=pk,
-        published_at__isnull=False
+        published_at__isnull=False,
+        published_at__lte=now()
     )
 
     return render(request, 'news/news_detail.html', {
-        'item': item
+        'news': news
     })
