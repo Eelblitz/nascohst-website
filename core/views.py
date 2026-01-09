@@ -21,50 +21,28 @@ def robots_txt(request):
 def home(request):
     year = datetime.now().year
 
-    # Defaults that never crash
     management_staff = []
     search_data = []
+    latest_news = []
 
     try:
-        # --- Management staff ---
         management_staff = (
             Staff.objects
             .filter(category=Staff.MANAGEMENT, is_approved=True)
             .order_by('display_order')[:4]
         )
 
-        # --- Staff search ---
-        for staff in Staff.objects.filter(is_approved=True):
-            search_data.append({
-                "label": f"{staff.name} – {staff.designation}",
-                "url": "/staff/"
-            })
-
-        # --- Programmes ---
-        for programme in Programme.objects.select_related('school'):
-            search_data.append({
-                "label": f"{programme.name} ({programme.level})",
-                "url": f"/academics/{programme.school.id}/"
-            })
-
-        # --- News ---
-        for item in News.objects.filter(
+        latest_news = News.objects.filter(
             published_at__isnull=False,
             published_at__lte=now()
-        ):
-            search_data.append({
-                "label": item.title,
-                "url": f"/news/{item.id}/"
-            })
+        ).order_by('-published_at')[:3]
 
     except (OperationalError, ProgrammingError):
-        # Database not ready yet (migrations, fresh deploy, new DB)
-        # Site must still load
         pass
 
     return render(request, 'core/home.html', {
         'management_staff': management_staff,
-        'search_data': search_data,
+        'latest_news': latest_news,
         'year': year,
     })
 
