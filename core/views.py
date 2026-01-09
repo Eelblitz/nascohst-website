@@ -32,16 +32,36 @@ def home(request):
             .order_by('display_order')[:4]
         )
 
-        latest_news = News.objects.filter(
-            published_at__isnull=False,
-            published_at__lte=now()
-        ).order_by('-published_at')[:3]
+        for staff in Staff.objects.filter(is_approved=True):
+            search_data.append({
+                "label": f"{staff.name} – {staff.designation}",
+                "url": "/staff/"
+            })
+
+        for programme in Programme.objects.select_related('school'):
+            search_data.append({
+                "label": f"{programme.name} ({programme.level})",
+                "url": f"/academics/{programme.school.id}/"
+            })
+
+        latest_news = (
+            News.objects
+            .filter(published_at__isnull=False, published_at__lte=now())
+            .order_by('-published_at')[:3]
+        )
+
+        for item in latest_news:
+            search_data.append({
+                "label": item.title,
+                "url": f"/news/{item.id}/"
+            })
 
     except (OperationalError, ProgrammingError):
         pass
 
     return render(request, 'core/home.html', {
         'management_staff': management_staff,
+        'search_data': search_data,
         'latest_news': latest_news,
         'year': year,
     })

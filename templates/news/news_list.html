@@ -17,7 +17,8 @@
   <article class="bg-white rounded-xl shadow-sm overflow-hidden">
 
     {% if item.image %}
-      <img src="{{ item.image.url }}" alt="{{ item.title }}"
+      <img src="{{ item.image.url }}"
+           alt="{{ item.title }}"
            class="h-48 w-full object-cover">
     {% endif %}
 
@@ -27,7 +28,8 @@
       </p>
 
       <h2 class="font-semibold text-lg mb-3">
-        <a href="/news/{{ item.pk }}/" class="hover:underline">
+        <a href="{% url 'news:news_detail' item.pk %}"
+           class="hover:underline">
           {{ item.title }}
         </a>
       </h2>
@@ -36,25 +38,37 @@
         {{ item.content|truncatewords:22 }}
       </p>
 
-      <a href="/news/{{ item.pk }}/"
+      <a href="{% url 'news:news_detail' item.pk %}"
          class="text-primary font-medium hover:underline">
         Read more →
       </a>
     </div>
   </article>
   {% empty %}
-    <p>No news articles have been published yet.</p>
+    <p class="col-span-full text-center text-gray-500">
+      No news articles have been published yet.
+    </p>
   {% endfor %}
 </section>
 
 {% if news.has_other_pages %}
-<div class="flex justify-center gap-4 mt-10">
+<div class="flex justify-center items-center gap-4 mt-10 text-sm">
   {% if news.has_previous %}
-    <a href="?page={{ news.previous_page_number }}">← Previous</a>
+    <a href="?page={{ news.previous_page_number }}"
+       class="text-primary hover:underline">
+      ← Previous
+    </a>
   {% endif %}
-  <span>Page {{ news.number }} of {{ news.paginator.num_pages }}</span>
+
+  <span class="text-gray-600">
+    Page {{ news.number }} of {{ news.paginator.num_pages }}
+  </span>
+
   {% if news.has_next %}
-    <a href="?page={{ news.next_page_number }}">Next →</a>
+    <a href="?page={{ news.next_page_number }}"
+       class="text-primary hover:underline">
+      Next →
+    </a>
   {% endif %}
 </div>
 {% endif %}
