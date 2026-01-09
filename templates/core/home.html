@@ -179,11 +179,13 @@
         <p class="text-xs text-gray-500 mb-2">
           {{ item.published_at|date:"F j, Y" }}
         </p>
+
         <h3 class="font-semibold mb-3">
           <a href="{% url 'news:news_detail' item.pk %}" class="hover:underline">
-                      {{ item.title }}
+            {{ item.title }}
           </a>
         </h3>
+
         <p class="text-sm text-gray-600">
           {{ item.content|truncatewords:20 }}
         </p>
