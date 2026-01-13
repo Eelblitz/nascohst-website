@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import dj_database_url
 
+ENVIRONMENT = os.getenv("DJANGO_ENV", "development")
 # --------------------------------------------------
 # BASE DIRECTORY
 # --------------------------------------------------
@@ -16,19 +17,24 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError("DJANGO_SECRET_KEY environment variable not set")
 
-DEBUG = True  # MUST be False in production
+DEBUG = ENVIRONMENT != "production"  # MUST be False in production
 
 ALLOWED_HOSTS = [
+        "localhost",
+        "127.0.0.1",
     "nascohst.com.ng",
     "www.nascohst.com.ng",
     "nascohst-website.onrender.com",
     ".onrender.com",
+    
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://nascohst.com.ng",
     "https://www.nascohst.com.ng",
     "https://nascohst-website.onrender.com",
+    "http://127.0.0.1",
+    "http://localhost",
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -159,16 +165,26 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-}
+if ENVIRONMENT == "production":
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+    }
+else:
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+    }
 
 
 # --------------------------------------------------
@@ -189,13 +205,15 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'same-origin'
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-
-X_FRAME_OPTIONS = 'DENY'
-
-SECURE_SSL_REDIRECT = True
-
+if ENVIRONMENT == "production":
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+else:
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
+    X_FRAME_OPTIONS = 'DENY'
 
 # --------------------------------------------------
 # EMAIL CONFIGURATION
