@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'news',
     'gallery',
     'academics',
+    'students',
 ]
 
 
