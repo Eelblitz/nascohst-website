@@ -1,0 +1,178 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .stat-card {
+      background: #1f2933;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .stat-card h2 {
+      margin-bottom: 0.5rem;
+      font-size: 16px;
+      color: #9ca3af;
+    }
+
+    .stat-card p {
+      font-size: 28px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chart-box {
+      margin-top: 3rem;
+      background: #111827;
+      padding: 2rem;
+      border-radius: 12px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<p><a href="export-pdf/" class ="button"> Export Dashboard as PDF</p>
+<!-- STAT CARDS -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <h2>Total Students</h2>
+    <p>{{ total_students }}</p>
+  </div>
+
+  <div class="stat-card">
+    <h2>Current Students</h2>
+    <p>{{ current_students }}</p>
+  </div>
+
+  <div class="stat-card">
+    <h2>Alumni</h2>
+    <p>{{ alumni }}</p>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="chart-box">
+  <h2>Students by School</h2>
+  <canvas id="schoolChart"></canvas>
+</div>
+
+<div class="chart-box">
+  <h2>Current vs Alumni</h2>
+  <canvas id="statusChart"></canvas>
+</div>
+
+<p style="margin-top: 2rem;">
+  <a href="/admin/students/student/">← Back to Students</a>
+</p>
+
+<script>
+  // Students by School
+  const schoolLabels = [
+    {% for row in students_by_school %}
+      "{{ row.programme__school__name }}",
+    {% endfor %}
+  ];
+
+  const schoolData = [
+    {% for row in students_by_school %}
+      {{ row.total }},
+    {% endfor %}
+  ];
+
+  new Chart(document.getElementById("schoolChart"), {
+    type: "bar",
+    data: {
+      labels: schoolLabels,
+      datasets: [{
+        label: "Students",
+        data: schoolData,
+        backgroundColor: "#3b82f6"
+      }]
+    },
+    options: {
+      animation: {
+        duration: 1200,
+        easing: "easeOutQuart"
+      }
+    }
+  });
+
+  // Current vs Alumni
+  new Chart(document.getElementById("statusChart"), {
+    type: "doughnut",
+    data: {
+      labels: ["Current", "Alumni"],
+      datasets: [{
+        data: [{{ current_students }}, {{ alumni }}],
+        backgroundColor: ["#22c55e", "#f97316"]
+      }]
+    },
+    options: {
+      animation: {
+        animateRotate: true,
+        duration: 1200
+      }
+    }
+  });
+</script>
+{% endblock %}
+
+<div class="chart-box">
+  <h2>Students by Programme</h2>
+  <canvas id="programmeChart"></canvas>
+</div>
+
+<script>
+  const programmeLabels = [
+    {% for row in students_by_programme %}
+      "{{ row.programme__name }}",
+    {% endfor %}
+  ];
+
+  const programmeData = [
+    {% for row in students_by_programme %}
+      {{ row.total }},
+    {% endfor %}
+  ];
+
+  new Chart(document.getElementById("programmeChart"), {
+    type: "bar",
+    data: {
+      labels: programmeLabels,
+      datasets: [{
+        label: "Students per Programme",
+        data: programmeData,
+        backgroundColor: "#8b5cf6"
+      }]
+    },
+    options: {
+      animation: {
+        duration: 1400,
+        easing: "easeOutCubic"
+      }
+    }
+  });
+</script>

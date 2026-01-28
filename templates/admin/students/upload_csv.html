@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+  <h1>Upload Students Data</h1>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+      <input type="file" name="csv_file" accept=".csv" required>
+    </p>
+    <button type="submit" class="default">Upload</button>
+  </form>
+
+  <p style="margin-top: 20px;">
+    <a href="../">← Back to Students</a>
+  </p>
+{% endblock %}
