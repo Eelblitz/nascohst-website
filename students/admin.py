@@ -1,3 +1,15 @@
+"""
+NOTE:
+WeasyPrint-based PDF export is intentionally disabled.
+
+Reason:
+- Requires OS-level libraries (Pango/Cairo)
+- Not portable across Windows dev + Linux prod yet
+
+TODO:
+- Re-enable PDF export when deployment environment is finalized
+"""
+
 from django.contrib import admin, messages
 from django.shortcuts import redirect, render
 from django.urls import path
@@ -12,10 +24,10 @@ from .models import Student
 from academics.models import Programme
 
 # Optional PDF support (safe on Windows)
-try:
-    from weasyprint import HTML
-except Exception:
-    HTML = None
+#try:
+#    from weasyprint import HTML
+#except Exception:
+#    HTML = None
 
 
 # ============================
