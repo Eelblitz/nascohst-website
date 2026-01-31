@@ -19,33 +19,24 @@ if not SECRET_KEY:
 
 DEBUG = ENVIRONMENT != "production"  # MUST be False in production
 
-ALLOWED_HOSTS = [
-        "localhost",
-        "127.0.0.1",
-        
+ALLOWED_HOSTS = [     
     #Primary domain
     "nascohst.edu.ng",
     "www.nascohst.edu.ng",
-    
-    #Legacy domain (temporary redirect)
-    "nascohst.com.ng",
-    "www.nascohst.com.ng",
-    
+      
     #Render 
     "nascohst-website.onrender.com",
     ".onrender.com",
     
+    "localhost",
+    "127.0.0.1",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     # Primary domain
     "https://nascohst.edu.ng",
     "https://www.nascohst.edu.ng",
-    
-    # Legacy domain (temporary redirect)
-    "https://nascohst.com.ng",
-    "https://www.nascohst.com.ng",
-    
+        
     "https://nascohst-website.onrender.com",
     "http://127.0.0.1",
     "http://localhost",
