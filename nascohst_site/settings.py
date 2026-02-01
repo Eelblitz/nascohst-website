@@ -21,8 +21,8 @@ DEBUG = ENVIRONMENT != "production"  # MUST be False in production
 
 ALLOWED_HOSTS = [     
     #Primary domain
-    "nascohst.edu.ng",
-    "www.nascohst.edu.ng",
+    "nascohst.com.ng",
+    "www.nascohst.com.ng",
       
     #Render 
     "nascohst-website.onrender.com",
@@ -34,8 +34,8 @@ ALLOWED_HOSTS = [
 
 CSRF_TRUSTED_ORIGINS = [
     # Primary domain
-    "https://nascohst.edu.ng",
-    "https://www.nascohst.edu.ng",
+    "https://nascohst.com.ng",
+    "https://www.nascohst.com.ng",
         
     "https://nascohst-website.onrender.com",
     "http://127.0.0.1",
