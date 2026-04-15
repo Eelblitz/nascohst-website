@@ -12,6 +12,8 @@ class Student(models.Model):
         ('PD I', 'Professional Diploma 100L'),
         ('PD II', 'Professional Diploma 200L'),
         ('PD III', 'Professional Diploma 300L'),
+        ('HND I', 'Higher National Diploma 100L'),
+        ('HND II', 'Higher National Diploma 200L'),
     ]
 
     GENDER_CHOICES = [
@@ -42,6 +44,13 @@ class Student(models.Model):
         related_name='students'
     )
 
+    gsm_number = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        help_text="Student GSM/mobile number",
+    )
+
     level = models.CharField(
         max_length=6,
         choices=LEVEL_CHOICES,
@@ -59,6 +68,12 @@ class Student(models.Model):
         blank=True,
         null=True,
         help_text="Year of graduation (leave empty for current students)"
+    )
+
+    remarks = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Additional remarks about the student",
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -3,7 +3,7 @@ services:
     name: nascohst-website
     env: python
     plan: starter
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
     startCommand: gunicorn nascohst_site.wsgi:application
     healthCheckPath: /
     envVars:
