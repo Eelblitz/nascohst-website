@@ -6,10 +6,29 @@ from academics.models import Programme
 
 
 class Student(models.Model):
+    LEVEL_CHOICES = [
+        ('ND I', 'National Diploma 100L'),
+        ('ND II', 'National Diploma 200L'),
+        ('PD I', 'Professional Diploma 100L'),
+        ('PD II', 'Professional Diploma 200L'),
+        ('PD III', 'Professional Diploma 300L'),
+    ]
+
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    ]
+
     matriculation_number = models.CharField(
         max_length=50,
         unique=True,
         help_text="Official matriculation number"
+    )
+
+    index_number = models.CharField(
+        max_length=50,
+        help_text="Student index number",
     )
 
     full_name = models.CharField(
@@ -21,6 +40,19 @@ class Student(models.Model):
         Programme,
         on_delete=models.PROTECT,
         related_name='students'
+    )
+
+    level = models.CharField(
+        max_length=6,
+        choices=LEVEL_CHOICES,
+        default='ND I',
+        help_text="Academic level for this student",
+    )
+
+    gender = models.CharField(
+        max_length=6,
+        choices=GENDER_CHOICES,
+        help_text="Gender of the student",
     )
 
     graduation_year = models.PositiveIntegerField(
@@ -45,7 +77,7 @@ class Student(models.Model):
         return self.programme.school
 
     @property
-    def level(self):
+    def programme_level(self):
         return self.programme.level
 
     @property
