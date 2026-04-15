@@ -6,5 +6,5 @@ class News(models.Model):
     image = models.ImageField(upload_to='news/')
     published_at = models.DateTimeField(auto_now_add=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.title
