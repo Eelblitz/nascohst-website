@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: nascohst-website
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn nascohst_site.wsgi:application
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_SECRET_KEY
+      - key: DJANGO_ENV
+        value: production
+      - key: DATABASE_URL
+      - key: REDIS_URL
+      - key: EMAIL_HOST_USER
+      - key: EMAIL_HOST_PASSWORD
+      - key: CLOUDINARY_URL

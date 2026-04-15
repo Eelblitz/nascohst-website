@@ -41,16 +41,22 @@ def export_students_csv(modeladmin, request, queryset):
     writer = csv.writer(response)
     writer.writerow([
         "Matriculation Number",
+        "Index Number",
         "Full Name",
         "Programme",
+        "Level",
+        "Gender",
         "Graduation Year",
     ])
 
     for student in queryset:
         writer.writerow([
             student.matriculation_number,
+            student.index_number,
             student.full_name,
             student.programme.name,
+            student.get_level_display(),
+            student.get_gender_display(),
             student.graduation_year or "",
         ])
 
@@ -67,18 +73,24 @@ class StudentAdmin(admin.ModelAdmin):
 
     list_display = (
         "matriculation_number",
+        "index_number",
         "full_name",
         "programme",
+        "level",
+        "gender",
         "graduation_year",
     )
 
     list_filter = (
         "programme",
+        "level",
+        "gender",
         "graduation_year",
     )
 
     search_fields = (
         "matriculation_number",
+        "index_number",
         "full_name",
     )
 
@@ -123,6 +135,7 @@ class StudentAdmin(admin.ModelAdmin):
 
             required_headers = {
                 "matriculation_number",
+                "index_number",
                 "full_name",
                 "programme",
                 "graduation_year",
@@ -147,13 +160,22 @@ class StudentAdmin(admin.ModelAdmin):
                     except Programme.DoesNotExist:
                         continue
 
+                    defaults = {
+                        "index_number": row["index_number"].strip(),
+                        "full_name": row["full_name"].strip(),
+                        "programme": programme,
+                        "graduation_year": row.get("graduation_year") or None,
+                    }
+
+                    if "level" in row and row["level"].strip():
+                        defaults["level"] = row["level"].strip()
+
+                    if "gender" in row and row["gender"].strip():
+                        defaults["gender"] = row["gender"].strip()
+
                     _, was_created = Student.objects.get_or_create(
                         matriculation_number=row["matriculation_number"].strip(),
-                        defaults={
-                            "full_name": row["full_name"].strip(),
-                            "programme": programme,
-                            "graduation_year": row.get("graduation_year") or None,
-                        },
+                        defaults=defaults,
                     )
 
                     if was_created:

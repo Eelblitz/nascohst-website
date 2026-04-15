@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.timezone import now
+from django.core.cache import cache
 from datetime import datetime
 
 from django.db.utils import OperationalError, ProgrammingError
@@ -12,10 +13,7 @@ from .models import AboutPage
 
 
 def robots_txt(request):
-    return HttpResponse(
-        open('templates/robots.txt').read(),
-        content_type='text/plain'
-    )
+    return render(request, 'robots.txt', content_type='text/plain')
 
 
 def home(request):
@@ -26,10 +24,14 @@ def home(request):
     latest_news = []
 
     try:
-        management_staff = (
-            Staff.objects
-            .filter(category=Staff.MANAGEMENT, is_approved=True)
-            .order_by('display_order')[:4]
+        management_staff = cache.get_or_set(
+            'home_management_staff',
+            lambda: list(
+                Staff.objects
+                .filter(category=Staff.MANAGEMENT, is_approved=True)
+                .order_by('display_order')[:4]
+            ),
+            300,
         )
 
         for staff in Staff.objects.filter(is_approved=True):
@@ -44,10 +46,14 @@ def home(request):
                 "url": f"/academics/{programme.school.id}/"
             })
 
-        latest_news = (
-            News.objects
-            .filter(published_at__isnull=False, published_at__lte=now())
-            .order_by('-published_at')[:3]
+        latest_news = cache.get_or_set(
+            'home_latest_news',
+            lambda: list(
+                News.objects
+                .filter(published_at__isnull=False, published_at__lte=now())
+                .order_by('-published_at')[:3]
+            ),
+            300,
         )
 
         for item in latest_news:
