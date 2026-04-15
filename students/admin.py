@@ -44,9 +44,11 @@ def export_students_csv(modeladmin, request, queryset):
         "Index Number",
         "Full Name",
         "Programme",
+        "GSM Number",
         "Level",
         "Gender",
         "Graduation Year",
+        "Remarks",
     ])
 
     for student in queryset:
@@ -55,9 +57,11 @@ def export_students_csv(modeladmin, request, queryset):
             student.index_number,
             student.full_name,
             student.programme.name,
+            student.gsm_number or "",
             student.get_level_display(),
             student.get_gender_display(),
             student.graduation_year or "",
+            student.remarks or "",
         ])
 
     return response
@@ -76,6 +80,7 @@ class StudentAdmin(admin.ModelAdmin):
         "index_number",
         "full_name",
         "programme",
+        "gsm_number",
         "level",
         "gender",
         "graduation_year",
@@ -165,6 +170,8 @@ class StudentAdmin(admin.ModelAdmin):
                         "full_name": row["full_name"].strip(),
                         "programme": programme,
                         "graduation_year": row.get("graduation_year") or None,
+                        "gsm_number": row.get("gsm_number", "").strip() or None,
+                        "remarks": row.get("remarks", "").strip() or None,
                     }
 
                     if "level" in row and row["level"].strip():
