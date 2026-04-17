@@ -32,14 +32,8 @@
       </div>
     </div>
 
-    <button onclick="openSearch()"
-            class="text-white hover:text-accent focus:outline-none"
-            aria-label="Search site">
-      🔍
-    </button>
-
-    <!-- Desktop Nav -->
-    <nav class="hidden md:flex gap-6 text-sm font-medium text-white">
+    <!-- Desktop Nav (NOW ALWAYS VISIBLE) -->
+    <nav class="flex gap-6 text-sm font-medium text-white">
       <a href="/" class="hover:text-accent">Home</a>
       <a href="/about/" class="hover:text-accent">About</a>
       <a href="/academics/" class="hover:text-accent">Academics</a>
@@ -62,7 +56,7 @@
 
   <!-- Mobile Menu -->
   <div id="mobileMenu"
-       class="hidden md:hidden bg-primary border-t border-green-700">
+       class="hidden bg-primary border-t border-green-700 md:hidden">
     <nav class="px-4 py-6 space-y-4 text-white text-sm">
       <a href="/" class="block hover:text-accent">Home</a>
       <a href="/about/" class="block hover:text-accent">About</a>
@@ -71,17 +65,9 @@
       <a href="/news/" class="block hover:text-accent">Today's News</a>
       <a href="/contact/" class="block hover:text-accent">Contact</a>
       <a href="/gallery/" class="hover:underline">Gallery</a>
-
-
     </nav>
   </div>
 </header>
-
-<script>
-  function toggleMenu() {
-    document.getElementById('mobileMenu').classList.toggle('hidden');
-  }
-</script>
 
 <!-- Main -->
 <main class="max-w-7xl mx-auto px-4 py-12">
@@ -119,44 +105,19 @@
   </div>
 
   <div class="text-center text-xs text-gray-400 pb-4">
-    © {{ year|default:2026 }} BY MOHAMMED ISAH ATTAH. All rights reserved.
+    ©️ {{ year|default:2026 }} BY MOHAMMED ISAH ATTAH. All rights reserved.
   </div>
 </footer>
 
-<!-- Search Modal -->
-<div id="searchModal"
-     class="fixed inset-0 bg-black/40 hidden z-50 flex items-start justify-center">
-
-  <div class="bg-white mt-24 w-full max-w-2xl rounded-xl shadow-lg p-6">
-
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="font-semibold text-lg">Search the site</h2>
-      <button onclick="closeSearch()" class="text-gray-500 hover:text-black">✕</button>
-    </div>
-
-    <input type="text"
-           id="searchInput"
-           placeholder="Search staff, programmes, news…"
-           class="w-full border rounded-md px-4 py-3 focus:ring-2 focus:ring-primary">
-
-    <div id="searchResults"
-         class="mt-6 space-y-3 text-sm text-gray-700">
-      <p class="text-gray-500">Start typing to search…</p>
-    </div>
-
-  </div>
-</div>
-
+<!-- Scripts -->
 <script>
-  function openSearch() {
-    document.getElementById('searchModal').classList.remove('hidden');
-    document.getElementById('searchInput').focus();
-  }
-
-  function closeSearch() {
-    document.getElementById('searchModal').classList.add('hidden');
-  }
+document.addEventListener("DOMContentLoaded", function () {
+  window.toggleMenu = function () {
+    document.getElementById('mobileMenu').classList.toggle('hidden');
+  };
+});
 </script>
+
 <script src="{% static 'js/site.js' %}" defer></script>
 
 </body>
