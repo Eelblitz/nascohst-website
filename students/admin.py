@@ -211,18 +211,24 @@ class StudentAdmin(admin.ModelAdmin):
     # DEPARTMENT EXPORT
     # ============================
     def download_students_by_department(self, request):
-        school_id = request.GET.get("school_id")
+        school_name = request.GET.get("school_name")
         fmt = request.GET.get("format", "csv")
 
         schools = School.objects.order_by("name")
         queryset = Student.objects.select_related("programme", "programme__school")
 
-        if school_id:
-            queryset = queryset.filter(programme__school_id=school_id)
-            school_name = schools.filter(id=school_id).first()
-            school_name = school_name.name if school_name else "department"
+        if school_name and school_name != "All Departments":
+            # Find school by name (case-insensitive)
+            school = schools.filter(name__iexact=school_name).first()
+            if school:
+                queryset = queryset.filter(programme__school=school)
+                filename_school_name = school.name
+            else:
+                # If school not found, return empty queryset
+                queryset = queryset.none()
+                filename_school_name = "unknown_department"
         else:
-            school_name = "all_departments"
+            filename_school_name = "all_departments"
 
         if fmt != "csv":
             return HttpResponse(
@@ -230,7 +236,7 @@ class StudentAdmin(admin.ModelAdmin):
                 status=400,
             )
 
-        return self._export_students_csv_response(queryset, school_name)
+        return self._export_students_csv_response(queryset, filename_school_name)
 
     def _export_students_csv_response(self, queryset, school_name):
         filename = f"students_{school_name.replace(' ', '_').lower()}.csv"
