@@ -211,24 +211,16 @@ class StudentAdmin(admin.ModelAdmin):
     # DEPARTMENT EXPORT
     # ============================
     def download_students_by_department(self, request):
-        school_name = request.GET.get("school_name")
+        programme_name = request.GET.get("programme_name")
         fmt = request.GET.get("format", "csv")
 
-        schools = School.objects.order_by("name")
         queryset = Student.objects.select_related("programme", "programme__school")
 
-        if school_name and school_name != "All Departments":
-            # Find school by name (case-insensitive)
-            school = schools.filter(name__iexact=school_name).first()
-            if school:
-                queryset = queryset.filter(programme__school=school)
-                filename_school_name = school.name
-            else:
-                # If school not found, return empty queryset
-                queryset = queryset.none()
-                filename_school_name = "unknown_department"
+        if programme_name and programme_name != "All Programmes":
+            queryset = queryset.filter(programme__name__icontains=programme_name)
+            filename_school_name = programme_name
         else:
-            filename_school_name = "all_departments"
+            filename_school_name = "all_programmes"
 
         if fmt != "csv":
             return HttpResponse(
@@ -394,6 +386,7 @@ class StudentAdmin(admin.ModelAdmin):
         )
 
         schools = School.objects.order_by("name")
+        programmes = Programme.objects.order_by("name")
 
         context = {
             "title": "Student Analytics Dashboard",
@@ -416,6 +409,7 @@ class StudentAdmin(admin.ModelAdmin):
             "registration_trend": registration_trend,
             "programme_summary": programme_summary,
             "schools": schools,
+            "programmes": programmes,
         }
 
         return render(

@@ -200,14 +200,14 @@
 {% block content %}
 <h1>{{ title }}</h1>
 
-<form id="department-export-form" class="export-panel" method="get" action="{% url 'admin:students_student_download_by_department' %}">
+<form id="programme-export-form" class="export-panel" method="get" action="{% url 'admin:students_student_download_by_department' %}">
   <div class="export-group">
-    <label for="school_name">Department</label>
-    <input type="text" id="school_name" name="school_name" list="schools-list" placeholder="Type department name..." autocomplete="off">
-    <datalist id="schools-list">
-      <option value="All Departments">
-      {% for school in schools %}
-      <option value="{{ school.name }}">
+    <label for="programme_name">Programme</label>
+    <input type="text" id="programme_name" name="programme_name" list="programmes-list" placeholder="Type programme name..." autocomplete="off">
+    <datalist id="programmes-list">
+      <option value="All Programmes">
+      {% for programme in programmes %}
+      <option value="{{ programme.name }}">
       {% endfor %}
     </datalist>
   </div>
@@ -219,7 +219,7 @@
     </select>
   </div>
 
-  <button type="submit">Download by Department</button>
+  <button type="submit">Download by Programme</button>
 </form>
 
 <!-- KEY METRICS -->
@@ -661,26 +661,24 @@
     options: { ...chartOptions, scales: { x: { stacked: true }, y: { beginAtZero: true, ticks: { precision: 0 } } } }
   });
 
-  // Department search functionality
+  // Programme search functionality
   document.addEventListener('DOMContentLoaded', function() {
-    const schoolInput = document.getElementById('school_name');
-    const datalist = document.getElementById('schools-list');
+    const programmeInput = document.getElementById('programme_name');
 
-    // Clear input when user starts typing (if it was "All Departments")
-    schoolInput.addEventListener('input', function() {
-      if (this.value === 'All Departments') {
+    // Clear input when user starts typing (if it was "All Programmes")
+    programmeInput.addEventListener('input', function() {
+      if (this.value === 'All Programmes') {
         this.value = '';
       }
     });
 
-    // Handle form submission - remove school_name parameter if "All Departments" or empty
-    const form = document.getElementById('department-export-form');
+    // Handle form submission - remove programme_name parameter if "All Programmes" or empty
+    const form = document.getElementById('programme-export-form');
     form.addEventListener('submit', function(e) {
-      const inputValue = schoolInput.value.trim();
-      if (!inputValue || inputValue === 'All Departments') {
-        // Remove the school_name parameter for "All Departments"
+      const inputValue = programmeInput.value.trim();
+      if (!inputValue || inputValue === 'All Programmes') {
         const url = new URL(form.action);
-        url.searchParams.delete('school_name');
+        url.searchParams.delete('programme_name');
         form.action = url.toString();
       }
     });
