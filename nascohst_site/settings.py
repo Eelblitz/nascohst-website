@@ -224,18 +224,14 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'same-origin'
 
-CONTENT_SECURITY_POLICY = {
-    'DIRECTIVES': {
-        'default-src': ("'self'",),
-        'script-src': ("'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"),
-        'style-src': ("'self'", "https://fonts.googleapis.com", "'unsafe-inline'"),
-        'font-src': ("'self'", "https://fonts.gstatic.com"),
-        'img-src': ("'self'", "data:", "https://res.cloudinary.com"),
-        'connect-src': ("'self'",),
-        'base-uri': ("'self'",),
-        'frame-ancestors': ("'none'",),
-    }
-}
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'",)
+CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com", "'unsafe-inline'",)
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com",)
+CSP_IMG_SRC = ("'self'", "data:", "https://res.cloudinary.com",)
+CSP_CONNECT_SRC = ("'self'",)
+CSP_BASE_URI = ("'self'",)
+CSP_FRAME_ANCESTORS = ("'none'",)
 
 if ENVIRONMENT == "production":
     CSRF_COOKIE_SECURE = True
