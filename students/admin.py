@@ -22,7 +22,7 @@ import csv
 from io import TextIOWrapper
 
 from .models import Student
-from academics.models import Programme
+from academics.models import Programme, School
 
 # Optional PDF support (safe on Windows)
 #try:
@@ -118,6 +118,11 @@ class StudentAdmin(admin.ModelAdmin):
                 self.admin_site.admin_view(self.analytics_dashboard),
                 name="students_student_dashboard",
             ),
+            path(
+                "download-by-department/",
+                self.admin_site.admin_view(self.download_students_by_department),
+                name="students_student_download_by_department",
+            ),
         ]
         return custom_urls + urls
 
@@ -201,6 +206,66 @@ class StudentAdmin(admin.ModelAdmin):
             "admin/students/upload_csv.html",
             {"title": "Upload Students via CSV"},
         )
+
+    # ============================
+    # DEPARTMENT EXPORT
+    # ============================
+    def download_students_by_department(self, request):
+        school_id = request.GET.get("school_id")
+        fmt = request.GET.get("format", "csv")
+
+        schools = School.objects.order_by("name")
+        queryset = Student.objects.select_related("programme", "programme__school")
+
+        if school_id:
+            queryset = queryset.filter(programme__school_id=school_id)
+            school_name = schools.filter(id=school_id).first()
+            school_name = school_name.name if school_name else "department"
+        else:
+            school_name = "all_departments"
+
+        if fmt != "csv":
+            return HttpResponse(
+                "Only CSV format is supported at this time.",
+                status=400,
+            )
+
+        return self._export_students_csv_response(queryset, school_name)
+
+    def _export_students_csv_response(self, queryset, school_name):
+        filename = f"students_{school_name.replace(' ', '_').lower()}.csv"
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
+
+        writer = csv.writer(response)
+        writer.writerow([
+            "Matriculation Number",
+            "Index Number",
+            "Full Name",
+            "Programme",
+            "School",
+            "GSM Number",
+            "Level",
+            "Gender",
+            "Graduation Year",
+            "Remarks",
+        ])
+
+        for student in queryset.order_by("programme__school__name", "programme__name", "full_name"):
+            writer.writerow([
+                student.matriculation_number,
+                student.index_number,
+                student.full_name,
+                student.programme.name,
+                student.programme.school.name,
+                student.gsm_number or "",
+                student.get_level_display(),
+                student.get_gender_display(),
+                student.graduation_year or "",
+                student.remarks or "",
+            ])
+
+        return response
 
     # ============================
     # ANALYTICS DASHBOARD
@@ -322,6 +387,8 @@ class StudentAdmin(admin.ModelAdmin):
             .order_by("-total")
         )
 
+        schools = School.objects.order_by("name")
+
         context = {
             "title": "Student Analytics Dashboard",
             "total_students": total_students,
@@ -342,6 +409,7 @@ class StudentAdmin(admin.ModelAdmin):
             "gender_level_series": gender_level_series,
             "registration_trend": registration_trend,
             "programme_summary": programme_summary,
+            "schools": schools,
         }
 
         return render(

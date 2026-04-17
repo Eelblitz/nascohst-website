@@ -67,6 +67,47 @@
       margin-top: 0.5rem;
     }
 
+    .export-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+    }
+
+    .export-panel label {
+      font-size: 13px;
+      color: #4a5568;
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    .export-panel select,
+    .export-panel button {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      border: 1px solid #cbd5e0;
+      font-size: 14px;
+    }
+
+    .export-panel button {
+      background: #3182ce;
+      color: white;
+      border-color: #3182ce;
+      cursor: pointer;
+    }
+
+    .export-panel button:hover {
+      background: #2b6cb0;
+      border-color: #2b6cb0;
+    }
+
+    .export-panel .export-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 240px;
+    }
+
     .charts-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
@@ -157,6 +198,27 @@
 
 {% block content %}
 <h1>{{ title }}</h1>
+
+<form id="department-export-form" class="export-panel" method="get" action="{% url 'admin:students_student_download_by_department' %}">
+  <div class="export-group">
+    <label for="school_id">Department</label>
+    <select id="school_id" name="school_id">
+      <option value="">All Departments</option>
+      {% for school in schools %}
+      <option value="{{ school.id }}">{{ school.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="export-group">
+    <label for="format">File Format</label>
+    <select id="format" name="format">
+      <option value="csv">CSV</option>
+    </select>
+  </div>
+
+  <button type="submit">Download by Department</button>
+</form>
 
 <!-- KEY METRICS -->
 <div class="metrics-grid">
