@@ -43,26 +43,32 @@ def export_students_csv(modeladmin, request, queryset):
     writer.writerow([
         "Matriculation Number",
         "Index Number",
-        "Full Name",
+        "Last Name",
+        "Other Names",
         "Programme",
         "GSM Number",
         "Level",
         "Gender",
         "Graduation Year",
         "Remarks",
+        "CGPA",
+        "Grade",
     ])
 
     for student in queryset:
         writer.writerow([
             student.matriculation_number,
             student.index_number,
-            student.full_name,
+            student.last_name,
+            student.other_names,
             student.programme.name,
             student.gsm_number or "",
             student.get_level_display(),
             student.get_gender_display(),
             student.graduation_year or "",
             student.remarks or "",
+            student.cgpa or "",
+            student.grade,
         ])
 
     return response
@@ -79,12 +85,15 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = (
         "matriculation_number",
         "index_number",
-        "full_name",
+        "last_name",
+        "other_names",
         "programme",
         "gsm_number",
         "level",
         "gender",
         "graduation_year",
+        "cgpa",
+        "grade",
     )
 
     list_filter = (
@@ -92,15 +101,17 @@ class StudentAdmin(admin.ModelAdmin):
         "level",
         "gender",
         "graduation_year",
+        "grade",
     )
 
     search_fields = (
         "matriculation_number",
         "index_number",
-        "full_name",
+        "last_name",
+        "other_names",
     )
 
-    ordering = ("full_name",)
+    ordering = ("last_name", "other_names")
 
     # ============================
     # CUSTOM URLS
@@ -147,9 +158,12 @@ class StudentAdmin(admin.ModelAdmin):
             required_headers = {
                 "matriculation_number",
                 "index_number",
-                "full_name",
+                "last_name",
+                "other_names",
                 "programme",
                 "graduation_year",
+                "cgpa",
+                "grade",
             }
 
             if not required_headers.issubset(reader.fieldnames):
@@ -171,19 +185,25 @@ class StudentAdmin(admin.ModelAdmin):
                     except Programme.DoesNotExist:
                         continue
 
+                    graduation_year = (row.get("graduation_year") or "").strip()
+                    cgpa = (row.get("cgpa") or "").strip()
+
                     defaults = {
                         "index_number": row["index_number"].strip(),
-                        "full_name": row["full_name"].strip(),
+                        "last_name": row["last_name"].strip(),
+                        "other_names": (row.get("other_names") or "").strip(),
                         "programme": programme,
-                        "graduation_year": row.get("graduation_year") or None,
-                        "gsm_number": row.get("gsm_number", "").strip() or None,
-                        "remarks": row.get("remarks", "").strip() or None,
+                        "graduation_year": graduation_year or None,
+                        "gsm_number": (row.get("gsm_number") or "").strip() or None,
+                        "remarks": (row.get("remarks") or "").strip() or None,
+                        "cgpa": cgpa or None,
+                        "grade": (row.get("grade") or "").strip(),
                     }
 
-                    if "level" in row and row["level"].strip():
+                    if (row.get("level") or "").strip():
                         defaults["level"] = row["level"].strip()
 
-                    if "gender" in row and row["gender"].strip():
+                    if (row.get("gender") or "").strip():
                         defaults["gender"] = row["gender"].strip()
 
                     _, was_created = Student.objects.get_or_create(
@@ -239,7 +259,8 @@ class StudentAdmin(admin.ModelAdmin):
         writer.writerow([
             "Matriculation Number",
             "Index Number",
-            "Full Name",
+            "Last Name",
+            "Other Names",
             "Programme",
             "School",
             "GSM Number",
@@ -247,13 +268,16 @@ class StudentAdmin(admin.ModelAdmin):
             "Gender",
             "Graduation Year",
             "Remarks",
+            "CGPA",
+            "Grade",
         ])
 
-        for student in queryset.order_by("programme__school__name", "programme__name", "full_name"):
+        for student in queryset.order_by("programme__school__name", "programme__name", "last_name", "other_names"):
             writer.writerow([
                 student.matriculation_number,
                 student.index_number,
-                student.full_name,
+                student.last_name,
+                student.other_names,
                 student.programme.name,
                 student.programme.school.name,
                 student.gsm_number or "",
@@ -261,6 +285,8 @@ class StudentAdmin(admin.ModelAdmin):
                 student.get_gender_display(),
                 student.graduation_year or "",
                 student.remarks or "",
+                student.cgpa or "",
+                student.grade,
             ])
 
         return response

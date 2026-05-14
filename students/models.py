@@ -33,9 +33,15 @@ class Student(models.Model):
         help_text="Student index number",
     )
 
-    full_name = models.CharField(
-        max_length=200,
-        help_text="Student full name as it appears on records"
+    last_name = models.CharField(
+        max_length=100,
+        help_text="Student surname or family name"
+    )
+
+    other_names = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text="Student first name and other names"
     )
 
     programme = models.ForeignKey(
@@ -77,16 +83,36 @@ class Student(models.Model):
         help_text="Additional remarks about the student",
     )
 
+    cgpa = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        help_text="Cumulative grade point average"
+    )
+
+    grade = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Final grade or classification"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['full_name']
+        ordering = ['last_name', 'other_names']
         indexes = [
             models.Index(fields=['matriculation_number']),
         ]
 
     def __str__(self):
         return f"{self.full_name} ({self.matriculation_number})"
+
+    @property
+    def full_name(self):
+        return " ".join(
+            part for part in [self.last_name, self.other_names] if part
+        )
 
     @property
     def school(self):
