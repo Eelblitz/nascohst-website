@@ -33,11 +33,12 @@
     {% for staff in academic_staff %}
     <div class="bg-white rounded-xl shadow-sm p-6 text-center">
       {% if staff.photo %}
-      <img src="{{ staff.photo.url }}"
-           alt="Photo of {{ staff.name }}"
-           class="w-32 h-32 mx-auto rounded-full object-cover mb-4">
+      <div class="staff-photo mx-auto mb-4">
+        <img src="{{ staff.photo.url }}"
+             alt="Photo of {{ staff.name }}">
+      </div>
       {% else %}
-      <div class="w-32 h-32 mx-auto rounded-full bg-gray-100 mb-4"></div>
+      <div class="staff-photo mx-auto mb-4 bg-gray-100"></div>
       {% endif %}
 
       <h3 class="font-semibold text-lg">{{ staff.name }}</h3>
@@ -61,11 +62,12 @@
     {% for staff in non_academic_staff %}
     <div class="bg-white rounded-xl shadow-sm p-6 text-center">
       {% if staff.photo %}
-      <img src="{{ staff.photo.url }}"
-           alt="Photo of {{ staff.name }}"
-           class="w-28 h-28 mx-auto rounded-full object-cover mb-4">
+      <div class="staff-photo mx-auto mb-4">
+        <img src="{{ staff.photo.url }}"
+             alt="Photo of {{ staff.name }}">
+      </div>
       {% else %}
-      <div class="w-28 h-28 mx-auto rounded-full bg-gray-100 mb-4"></div>
+      <div class="staff-photo mx-auto mb-4 bg-gray-100"></div>
       {% endif %}
 
       <h3 class="font-semibold">{{ staff.name }}</h3>
