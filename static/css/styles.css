@@ -70,11 +70,16 @@ button, input, select, textarea {
 .object-cover { object-fit: cover; }
 .w-full { width: 100%; }
 .w-auto { width: auto; }
+.w-6 { width: 1.5rem; }
+.w-28 { width: 7rem; }
+.w-36 { width: 9rem; }
 .h-full { height: 100%; }
+.h-6 { height: 1.5rem; }
 .h-10 { height: 2.5rem; }
 .h-14 { height: 3.5rem; }
 .h-28 { height: 7rem; }
 .h-32 { height: 8rem; }
+.h-36 { height: 9rem; }
 .h-48 { height: 12rem; }
 .max-w-7xl { max-width: 80rem; }
 .max-w-5xl { max-width: 64rem; }
@@ -115,12 +120,14 @@ button, input, select, textarea {
 .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
 .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
 .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+.text-xs { font-size: 0.75rem; }
 .text-sm { font-size: 0.875rem; }
 .text-lg { font-size: 1.125rem; }
 .text-xl { font-size: 1.25rem; }
 .text-2xl { font-size: 1.5rem; }
 .text-3xl { font-size: 1.875rem; }
 .text-4xl { font-size: 2.25rem; }
+.font-medium { font-weight: 500; }
 .font-semibold { font-weight: 600; }
 .font-bold { font-weight: 700; }
 .uppercase { text-transform: uppercase; }
@@ -140,6 +147,8 @@ button, input, select, textarea {
 .block { display: block; }
 .hidden { display: none !important; }
 .grid { display: grid; }
+.shrink-0 { flex-shrink: 0; }
+.gap-3 { gap: 0.75rem; }
 .gap-4 { gap: 1rem; }
 .gap-6 { gap: 1.5rem; }
 .gap-8 { gap: 2rem; }
@@ -149,6 +158,7 @@ button, input, select, textarea {
 .bg-green-50 { background-color: #ECFDF5; }
 .bg-black\/40 { background-color: rgba(0, 0, 0, 0.4); }
 .sticky { position: sticky; }
+.top-0 { top: 0; }
 .z-50 { z-index: 50; }
 .fixed { position: fixed; }
 .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
@@ -163,6 +173,66 @@ button, input, select, textarea {
 .hover\:bg-green-50:hover { background-color: #ECFDF5; }
 .hover\:bg-green-800:hover { background-color: #065F46; }
 .hover\:text-primary:hover { color: #0F5D3B; }
+
+.site-brand {
+  min-width: 0;
+}
+
+.site-brand__logo {
+  flex: 0 0 auto;
+}
+
+.site-brand__name {
+  max-width: 13.5rem;
+}
+
+.mobile-menu-button {
+  flex: 0 0 auto;
+}
+
+.staff-photo {
+  width: 8rem;
+  aspect-ratio: 4 / 5;
+  border-radius: 0.75rem;
+  background: #F3F4F6;
+  overflow: hidden;
+}
+
+.staff-photo--large {
+  width: min(100%, 13rem);
+}
+
+.staff-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center top;
+  background: #F3F4F6;
+}
+
+@media (max-width: 767px) {
+  main {
+    padding-top: 2rem;
+  }
+
+  .site-brand {
+    gap: 0.75rem;
+  }
+
+  .site-brand__name {
+    max-width: 11.5rem;
+    font-size: 0.82rem;
+    line-height: 1.2;
+  }
+
+  .staff-photo {
+    width: min(100%, 11rem);
+  }
+
+  .staff-photo--large {
+    width: min(100%, 15rem);
+  }
+}
 
 @media (min-width: 640px) {
   .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }

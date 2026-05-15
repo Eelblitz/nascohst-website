@@ -18,22 +18,22 @@
 
 <!-- Header -->
 <header class="bg-primary sticky top-0 z-50 shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
 
     <!-- Logo -->
-    <div class="flex items-center gap-3">
+    <div class="site-brand flex items-center gap-3">
       <img src="{% static 'logo.webp' %}" alt="NasCOHST Logo"
-           class="h-10 w-auto bg-white rounded p-1">
+           class="site-brand__logo h-10 w-auto bg-white rounded p-1">
       <div class="leading-tight">
-        <p class="font-semibold text-sm text-white">
+        <p class="site-brand__name font-semibold text-sm text-white">
           Nasarawa State College of Health Sciences
         </p>
         <p class="text-xs text-green-100">Keffi</p>
       </div>
     </div>
 
-    <!-- Desktop Nav (NOW ALWAYS VISIBLE) -->
-    <nav class="flex gap-6 text-sm font-medium text-white">
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex gap-6 text-sm font-medium text-white">
       <a href="/" class="hover:text-accent">Home</a>
       <a href="/about/" class="hover:text-accent">About</a>
       <a href="/academics/" class="hover:text-accent">Academics</a>
@@ -44,7 +44,10 @@
 
     <!-- Mobile Button -->
     <button onclick="toggleMenu()"
-            class="md:hidden text-white focus:outline-none">
+            class="md:hidden text-white focus:outline-none mobile-menu-button"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-controls="mobileMenu">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
            fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round"
