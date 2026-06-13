@@ -260,4 +260,35 @@ button, input, select, textarea {
 
 .stat-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 1rem; padding: 1.5rem; }
 
+.footer-gold {
+    background: #D4AF37;
+    color: #1F2937;
+    margin-top: 4rem;
+}
+
+.footer-gold .text-white,
+.footer-gold .font-semibold {
+    color: #0F5D3B;
+}
+
+.footer-gold a {
+    color: #1F2937;
+    transition: color 0.2s ease;
+}
+
+.footer-gold a:hover {
+    color: #065F46;
+}
+
+.footer-gold .text-gray-300,
+.footer-gold .text-gray-400 {
+    color: #374151;
+}
+
+.footer-gold {
+    background: #D4AF37;
+    color: #1F2937;
+    border-top: 5px solid #0F5D3B;
+    margin-top: 4rem;
+}
 .chart-box { background: #fff; border: 1px solid #E5E7EB; border-radius: 1rem; padding: 1rem; }
