@@ -145,7 +145,7 @@ button, input, select, textarea {
 .justify-between { justify-content: space-between; }
 .justify-center { justify-content: center; }
 .block { display: block; }
-.hidden { display: none !important; }
+.hidden { display: none; }
 .grid { display: grid; }
 .shrink-0 { flex-shrink: 0; }
 .gap-3 { gap: 0.75rem; }
