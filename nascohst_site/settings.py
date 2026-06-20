@@ -51,6 +51,7 @@ USE_X_FORWARDED_HOST = True
 # --------------------------------------------------
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -269,3 +270,12 @@ ADMIN_EMAIL = 'dmo@nascohst.com.ng'
 # --------------------------------------------------
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+JAZZMIN_SETTINGS = {
+    "site_title": "NASCOHST Admin",
+    "site_header": "NASARAWA STATE COLLEGE OF HEALTH SCIENCES AND TECHNOLOGY",
+    "site_brand": "NASCOHST Portal",
+    "welcome_sign": "Welcome to NASCOHST Administration",
+    "copyright": "NASCOHST",
+}
