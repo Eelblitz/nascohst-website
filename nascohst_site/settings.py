@@ -23,7 +23,10 @@ ALLOWED_HOSTS = [
     #Primary domain
     "nascohst.com.ng",
     "www.nascohst.com.ng",
-      
+    
+    "nascohst.edu.ng",
+    "www.nascohst.edu.ng",
+    
     #Render 
     "nascohst-website.onrender.com",
     ".onrender.com",
@@ -36,6 +39,9 @@ CSRF_TRUSTED_ORIGINS = [
     # Primary domain
     "https://nascohst.com.ng",
     "https://www.nascohst.com.ng",
+    
+     "https://nascohst.edu.ng",
+    "https://www.nascohst.edu.ng",
         
     "https://nascohst-website.onrender.com",
     "http://127.0.0.1",

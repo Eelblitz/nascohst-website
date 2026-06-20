@@ -137,11 +137,10 @@
   <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
     {% for staff in management_staff %}
     <div class="bg-white rounded-xl shadow-sm p-6 text-center card-hover">
-      <div class="w-28 h-28 mx-auto rounded-full bg-gray-100 mb-4 overflow-hidden">
+      <div class="staff-photo mx-auto mb-4 bg-gray-100">
         {% if staff.photo %}
           <img src="{{ staff.photo.url }}"
-               alt="Photo of {{ staff.name }}"
-               class="w-full h-full object-cover">
+               alt="Photo of {{ staff.name }}">
         {% endif %}
       </div>
 

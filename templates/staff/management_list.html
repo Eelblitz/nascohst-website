@@ -4,11 +4,11 @@
 {% block content %}
 
 <!-- PAGE INTRO -->
-<section class="mb-16">
+<section class="mb-16 text-center">
   <h1 class="text-3xl md:text-4xl font-bold mb-4">
     College Management
   </h1>
-  <p class="text-gray-600 max-w-3xl text-lg">
+  <p class="text-gray-600 max-w-3xl mx-auto text-lg">
     The leadership team responsible for academic direction, administration,
     and financial stewardship of the College.
   </p>
@@ -19,11 +19,12 @@
   {% for staff in management %}
   <div class="bg-white rounded-xl shadow-sm p-6 text-center">
     {% if staff.photo %}
-    <img src="{{ staff.photo.url }}"
-         alt="Photo of {{ staff.name }}"
-         class="w-36 h-36 mx-auto rounded-full object-cover mb-4">
+    <div class="staff-photo staff-photo--large mx-auto mb-4">
+      <img src="{{ staff.photo.url }}"
+           alt="Photo of {{ staff.name }}">
+    </div>
     {% else %}
-    <div class="w-36 h-36 mx-auto rounded-full bg-gray-100 mb-4"></div>
+    <div class="staff-photo staff-photo--large mx-auto mb-4 bg-gray-100"></div>
     {% endif %}
 
     <h3 class="font-semibold text-lg">{{ staff.name }}</h3>
