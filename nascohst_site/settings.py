@@ -196,7 +196,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 if ENVIRONMENT == "production":
     STORAGES = {
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
         "default": {
             "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
