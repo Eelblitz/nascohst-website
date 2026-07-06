@@ -4,14 +4,37 @@ from .models import Staff
 
 @admin.register(Staff)
 class StaffAdmin(admin.ModelAdmin):
-    list_display = ('name', 'designation', 'category', 'is_approved')
-    list_filter = ('category', 'is_approved')
-    search_fields = ('name', 'designation')
-    ordering = ('is_approved', 'display_order')
+    list_display = (
+        "name",
+        "designation",
+        "department",
+        "category",
+        "is_approved",
+    )
 
-    readonly_fields = ('created_at',)
+    list_filter = (
+        "category",
+        "is_approved",
+    )
 
-    actions = ['approve_staff']
+    search_fields = (
+        "name",
+        "designation",
+        "department",
+    )
+
+    ordering = (
+        "is_approved",
+        "display_order",
+    )
+
+    readonly_fields = (
+        "created_at",
+    )
+
+    actions = (
+        "approve_staff",
+    )
 
     def approve_staff(self, request, queryset):
         queryset.update(is_approved=True)

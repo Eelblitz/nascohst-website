@@ -3,14 +3,75 @@
 
 {% block content %}
 
-<section class="mb-14">
-  <h1 class="text-3xl md:text-4xl font-bold mb-4">
-    News & Updates
-  </h1>
-  <p class="text-gray-600 max-w-3xl text-lg">
-    Latest announcements, events, and developments from the College.
-  </p>
+<section class="mb-12">
+    <p class="text-sm uppercase tracking-widest text-primary font-semibold mb-2">
+        Publications
+    </p>
+
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-900">
+        Research, News & Academic Publications
+    </h1>
+
+    <p class="mt-4 max-w-3xl text-lg text-gray-600">
+        Discover the latest institutional news, academic articles,
+        research highlights, public health education, and official
+        announcements from NasCOHST.
+    </p>
 </section>
+{% if featured_article %}
+<section class="mb-16">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden lg:grid lg:grid-cols-2">
+
+        {% if featured_article.image %}
+        <img
+            src="{{ featured_article.image.url }}"
+            alt="{{ featured_article.title }}"
+            class="w-full h-full object-cover min-h-[350px]"
+        >
+        {% endif %}
+
+        <div class="p-8 lg:p-12 flex flex-col justify-center">
+
+            {% if featured_article.category %}
+            <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+                {{ featured_article.category.name }}
+            </span>
+            {% endif %}
+
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                {{ featured_article.title }}
+            </h2>
+
+            <p class="text-gray-600 mb-6 leading-relaxed">
+                {{ featured_article.excerpt }}
+            </p>
+
+            <div class="flex items-center text-sm text-gray-500 gap-4 mb-8">
+
+                {% if featured_article.author %}
+                    <span>
+                        By {{ featured_article.author.name }}
+                    </span>
+                {% endif %}
+
+                <span>
+                    {{ featured_article.published_at|date:"F j, Y" }}
+                </span>
+
+            </div>
+
+            <a
+                href="{% url 'news:news_detail' featured_article.pk %}"
+                class="inline-flex items-center text-primary font-semibold hover:underline"
+            >
+                Read Publication →
+            </a>
+
+        </div>
+
+    </div>
+</section>
+{% endif %}
 
 <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
   {% for item in news %}
