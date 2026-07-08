@@ -1,38 +1,274 @@
 {% extends "base.html" %}
-{% block title %}{{ news.title }} | NasCOHST{% endblock %}
+
+{% block title %}{{ news.title }} | Publications | NasCOHST{% endblock %}
 
 {% block content %}
 
-<div class="mb-6">
-  <a href="{% url 'news:news_list' %}"
-     class="text-sm text-primary hover:underline">
-    ← Back to News
-  </a>
-</div>
+<div class="max-w-5xl mx-auto">
 
-<article class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm overflow-hidden">
+    <!-- Breadcrumb -->
+    <nav class="mb-5 pb-4 border-b border-gray-100" aria-label="Breadcrumb">
 
-  {% if news.image %}
-  <img src="{{ news.image.url }}"
-       alt="{{ news.title }}"
-       class="w-full h-72 object-cover">
-  {% endif %}
+        <ol class="flex flex-wrap items-center gap-1.5 text-sm text-gray-500">
 
-  <div class="p-8">
+            <li class="flex items-center">
+                <a href="{% url 'home' %}"
+                   class="flex items-center gap-1.5 hover:text-primary transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                    <svg class="w-5 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+                    </svg>
+                    <span class="sr-only">Home</span>
+                </a>
+            </li>
 
-    <p class="text-xs text-gray-500 mb-2">
-      {{ news.published_at|date:"F j, Y" }}
-    </p>
+            <li class="flex items-center gap-1.5">
+                <svg class="w-5 h-10 text-gray-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+                <a href="{% url 'news:news_list' %}"
+                   class="hover:text-primary transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                    Publications
+                </a>
+            </li>
 
-    <h1 class="text-3xl md:text-4xl font-bold mb-6">
-      {{ news.title }}
+            {% if news.category %}
+            <li class="flex items-center gap-1.5">
+                <svg class="w-5 h-10 text-gray-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+                <a href="{% url 'news:news_list' %}?category={{ news.category.slug }}"
+                   class="hover:text-primary transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                    {{ news.category.name }}
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="flex items-center gap-1.5 min-w-0">
+                <svg class="w-10 h-10 text-gray-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+                <span class="font-medium text-gray-800 truncate" aria-current="page">
+                    {{ news.title }}
+                </span>
+            </li>
+
+        </ol>
+
+    </nav>
+
+    <!-- Category -->
+    {% if news.category %}
+    <span class="inline-flex items-center bg-green-100 text-green-700 text-xs font-semibold tracking-wide uppercase px-4 py-1.5 rounded-full mb-5">
+        {{ news.category.name }}
+    </span>
+    {% endif %}
+
+    <!-- Title -->
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8">
+        {{ news.title }}
     </h1>
 
-    <div class="prose max-w-none text-gray-700 leading-relaxed">
-      {{ news.content|linebreaks }}
+    <!-- Article Meta -->
+    <div class="flex flex-wrap items-center gap-6 mb-10 pb-8 border-b border-gray-100 text-gray-600">
+
+        {% if news.author %}
+        <div class="flex items-center gap-3">
+
+            {% if news.author.photo %}
+            <img
+                src="{{ news.author.photo.url }}"
+                alt="{{ news.author.name }}"
+                class="w-10 h-10 shrink-0 rounded-full object-cover"
+            >
+            {% else %}
+            <div class="w-12 h-12 shrink-0 rounded-full bg-green-100 flex items-center justify-center text-primary font-bold">
+                {{ news.author.name|first }}
+            </div>
+            {% endif %}
+
+            <div class="min-w-0">
+                <p class="font-semibold text-gray-900 leading-snug truncate">
+                    {{ news.author.name }}
+                </p>
+                <p class="text-sm text-gray-500 leading-snug truncate">
+                    {{ news.author.department }}
+                </p>
+            </div>
+
+        </div>
+
+        <span class="hidden sm:block w-px h-10 bg-gray-200" aria-hidden="true"></span>
+        {% endif %}
+
+        <div>
+
+    <p class="uppercase tracking-wide text-gray-400 text-xs">
+        Published
+    </p>
+
+    <p class="font-semibold text-gray-800">
+        {{ news.published_at|date:"F j, Y" }}
+    </p>
+
+    <p class="text-sm text-gray-500 mt-1">
+        📖 {{ news.reading_time }} min read
+    </p>
+
+</div>
+
     </div>
 
-  </div>
-</article>
+    <!-- Featured Image -->
+
+    {% if news.image %}
+    <img
+        src="{{ news.image.url }}"
+        alt="{{ news.title }}"
+        class="w-full h-[450px] object-cover rounded-2xl shadow-lg mb-12"
+    >
+    {% endif %}
+
+    <!-- Article Content -->
+
+    <article class="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-primary">
+
+        {{ news.content|linebreaks }}
+
+    </article>
+
+    <!-- About the Author -->
+
+    {% if news.author %}
+    <section class="mt-20 pt-12 border-t border-gray-100">
+
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">
+            About the Author
+        </h2>
+
+        <div class="max-w-3xl mx-auto">
+
+            <div class="flex justify-center mb-6">
+
+                {% if news.author.photo %}
+                <img
+                    src="{{ news.author.photo.url }}"
+                    alt="{{ news.author.name }}"
+                    class="w-32 h-32 rounded-full object-cover shadow-md ring-4 ring-white"
+                >
+                {% else %}
+                <div class="w-32 h-32 rounded-full bg-green-100 flex items-center justify-center text-4xl font-bold text-primary shadow-md ring-4 ring-white">
+                    {{ news.author.name|first }}
+                </div>
+                {% endif %}
+
+            </div>
+
+            <div class="text-center">
+
+                <h3 class="text-2xl font-bold text-gray-900">
+                    {{ news.author.name }}
+                </h3>
+
+                <p class="text-primary font-semibold mt-2">
+                    {{ news.author.designation }}
+                </p>
+
+                {% if news.author.department %}
+                <p class="text-gray-600 mt-1">
+                    {{ news.author.department }}
+                </p>
+                {% endif %}
+
+                {% if news.author.qualifications %}
+                <p class="mt-4 text-sm text-gray-500">
+                    {{ news.author.qualifications }}
+                </p>
+                {% endif %}
+
+            </div>
+
+            {% if news.author.biography %}
+            <div class="mt-8 text-gray-700 leading-8">
+                {{ news.author.biography|linebreaks }}
+            </div>
+            {% endif %}
+
+        </div>
+
+    </section>
+    {% endif %}
+
+    <!-- Related Publications -->
+
+    {% if related_articles %}
+
+    <section class="mt-20 pt-12 border-t border-gray-100">
+
+        <div class="flex items-center justify-between mb-8">
+
+            <h2 class="text-3xl font-bold text-gray-900">
+                Related Publications
+            </h2>
+
+            <a href="{% url 'news:news_list' %}"
+               class="text-primary hover:underline font-medium rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                View All →
+            </a>
+
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            {% for article in related_articles %}
+
+            <article class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 overflow-hidden border border-gray-100">
+
+                {% if article.image %}
+                <div class="overflow-hidden">
+                    <img
+                        src="{{ article.image.url }}"
+                        alt="{{ article.title }}"
+                        class="h-48 w-full object-cover group-hover:scale-105 transition duration-500"
+                    >
+                </div>
+                {% endif %}
+
+                <div class="p-6">
+
+                    {% if article.category %}
+                    <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                        {{ article.category.name }}
+                    </span>
+                    {% endif %}
+
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 leading-snug">
+                        <a href="{% url 'news:news_detail_slug' article.slug %}"
+                           class="hover:text-primary transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                            {{ article.title }}
+                        </a>
+                    </h3>
+
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">
+                        {{ article.excerpt|truncatewords:18 }}
+                    </p>
+
+                    <a href="{% url 'news:news_detail_slug' article.slug %}"
+                       class="text-primary font-semibold hover:underline rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                        Read Publication →
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}

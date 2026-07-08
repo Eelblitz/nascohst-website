@@ -1,137 +1,286 @@
 {% extends "base.html" %}
-{% block title %}News & Updates | NasCOHST{% endblock %}
+{% block title %}Publications | NasCOHST{% endblock %}
 
 {% block content %}
 
 <section class="mb-12">
+
     <p class="text-sm uppercase tracking-widest text-primary font-semibold mb-2">
         Publications
     </p>
 
     <h1 class="text-4xl md:text-5xl font-bold text-gray-900">
-        Research, News & Academic Publications
+        Research, News &amp; Academic Publications
     </h1>
 
-    <p class="mt-4 max-w-3xl text-lg text-gray-600">
-        Discover the latest institutional news, academic articles,
-        research highlights, public health education, and official
-        announcements from NasCOHST.
+    <p class="mt-4 max-w-3xl text-lg text-gray-500">
+        Discover institutional news, academic articles, research highlights,
+        public health education and official announcements.
     </p>
+
 </section>
+
+<!-- Search & Filter -->
+
+<form method="get" class="bg-white rounded-2xl shadow-sm border p-6 mb-12">
+
+    <div class="grid md:grid-cols-3 gap-4">
+
+        <input
+            type="text"
+            name="q"
+            value="{{ search_query }}"
+            placeholder="Search publications..."
+            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none"
+        >
+
+        <select
+            name="category"
+            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none"
+        >
+
+            <option value="">All Categories</option>
+
+            {% for category in categories %}
+
+            <option
+                value="{{ category.slug }}"
+                {% if selected_category == category.slug %}
+                selected
+                {% endif %}
+            >
+                {{ category.name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button
+            type="submit"
+            class="bg-primary text-white rounded-xl px-6 py-3 hover:opacity-90 transition"
+        >
+            Search
+        </button>
+
+    </div>
+
+</form>
+
 {% if featured_article %}
+
 <section class="mb-16">
+
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden lg:grid lg:grid-cols-2">
 
         {% if featured_article.image %}
         <img
             src="{{ featured_article.image.url }}"
             alt="{{ featured_article.title }}"
-            class="w-full h-full object-cover min-h-[350px]"
+            class="w-full h-[380px] object-cover"
         >
         {% endif %}
 
-        <div class="p-8 lg:p-12 flex flex-col justify-center">
+        <!-- Content -->
+        <div class="p-10 flex flex-col justify-center h-full">
 
             {% if featured_article.category %}
-            <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+            <span class="inline-flex w-fit items-center bg-green-100 text-green-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-4">
                 {{ featured_article.category.name }}
             </span>
             {% endif %}
 
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+            <h2 class="text-2xl md:text-2xl font-bold text-gray-900 leading-tight mb-4">
                 {{ featured_article.title }}
             </h2>
 
-            <p class="text-gray-600 mb-6 leading-relaxed">
+            <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-6 line-clamp-3">
                 {{ featured_article.excerpt }}
             </p>
 
-            <div class="flex items-center text-sm text-gray-500 gap-4 mb-8">
+            {% if featured_article.author %}
+            <div class="flex items-center gap-3 mb-6">
 
-                {% if featured_article.author %}
-                    <span>
-                        By {{ featured_article.author.name }}
-                    </span>
+                {% if featured_article.author.photo %}
+                <img
+                    src="{{ featured_article.author.photo.url }}"
+                    alt="{{ featured_article.author.name }}"
+                    class="w-10 h-10 shrink-0 rounded-full object-cover"
+                >
+                {% else %}
+                <div class="w-12 h-12 shrink-0 rounded-full bg-green-100 flex items-center justify-center text-primary font-bold">
+                    {{ featured_article.author.name|first }}
+                </div>
                 {% endif %}
 
-                <span>
-                    {{ featured_article.published_at|date:"F j, Y" }}
-                </span>
+                <div class="min-w-0">
+                    <h4 class="font-semibold text-gray-900 truncate">
+                        {{ featured_article.author.name }}
+                    </h4>
+                    <p class="text-sm text-gray-500 truncate">
+                        {{ featured_article.author.department }}
+                    </p>
+                </div>
 
             </div>
+            {% endif %}
 
-            <a
-                href="{% url 'news:news_detail' featured_article.pk %}"
-                class="inline-flex items-center text-primary font-semibold hover:underline"
-            >
-                Read Publication →
-            </a>
+            <div class="flex items-center gap-2 text-sm text-gray-500 border-t border-gray-200 pt-5 mb-8">
+                <span class="font-semibold text-gray-700">Published:</span>
+                <time datetime="{{ featured_article.published_at|date:'c' }}">
+                    {{ featured_article.published_at|date:"F j, Y" }}
+                </time>
+            </div>
+
+            <div>
+                <a
+                    href="{% url 'news:news_detail_slug' featured_article.slug %}"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-semibold hover:bg-green-800 transition"
+                >
+                    Read Publication
+                    <span aria-hidden="true">→</span>
+                </a>
+            </div>
 
         </div>
 
     </div>
+
 </section>
+
 {% endif %}
 
-<section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-  {% for item in news %}
-  <article class="bg-white rounded-xl shadow-sm overflow-hidden">
+<section class="mt-24 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+{% for item in news %}
+
+<article class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border">
 
     {% if item.image %}
-      <img src="{{ item.image.url }}"
-           alt="{{ item.title }}"
-           class="h-48 w-full object-cover">
+    <img
+        src="{{ item.image.url }}"
+        alt="{{ item.title }}"
+        class="h-56 w-full object-cover group-hover:scale-105 transition duration-500"
+    >
     {% endif %}
 
     <div class="p-6">
-      <p class="text-xs text-gray-500 mb-2">
-        {{ item.published_at|date:"F j, Y" }}
-      </p>
 
-      <h2 class="font-semibold text-lg mb-3">
-        <a href="{% url 'news:news_detail' item.pk %}"
-           class="hover:underline">
-          {{ item.title }}
-        </a>
-      </h2>
+        <div class="flex items-center justify-between mb-4">
 
-      <p class="text-sm text-gray-600 mb-4">
-        {{ item.content|truncatewords:22 }}
-      </p>
+    {% if item.category %}
+    <span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+        {{ item.category.name }}
+    </span>
+    {% endif %}
 
-      <a href="{% url 'news:news_detail' item.pk %}"
-         class="text-primary font-medium hover:underline">
-        Read more →
-      </a>
+    <div class="text-right text-xs text-gray-500">
+
+        <div>
+            {{ item.published_at|date:"M d, Y" }}
+        </div>
+
+        <div class="mt-1">
+            📖 {{ item.reading_time }} min read
+        </div>
+
     </div>
-  </article>
-  {% empty %}
-    <p class="col-span-full text-center text-gray-500">
-      No news articles have been published yet.
+
+</div>
+        <h2 class="text-xl font-bold mb-3">
+
+            <a href="{% url 'news:news_detail_slug' item.slug %}">
+                {{ item.title }}
+            </a>
+
+        </h2>
+
+        {% if item.author %}
+
+        <div class="flex items-center gap-3 mb-4">
+
+            {% if item.author.photo %}
+            <img
+                src="{{ item.author.photo.url }}"
+                class="w-10 h-10 rounded-full object-cover"
+            >
+            {% endif %}
+
+            <div>
+
+                <p class="text-sm font-medium">
+                    {{ item.author.name }}
+                </p>
+
+                <p class="text-xs text-gray-500">
+                    {{ item.author.department }}
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        <p class="text-gray-600 mb-6">
+
+            {{ item.excerpt|truncatewords:25 }}
+
+        </p>
+
+        <a
+            href="{% url 'news:news_detail_slug' item.slug %}"
+            class="text-primary font-semibold hover:underline"
+        >
+            Read Publication →
+        </a>
+
+    </div>
+
+</article>
+
+{% empty %}
+
+<div class="col-span-full text-center py-16">
+
+    <h3 class="text-2xl font-bold mb-3">
+        No publications found
+    </h3>
+
+    <p class="text-gray-500">
+        Try another keyword or category.
     </p>
-  {% endfor %}
+
+</div>
+
+{% endfor %}
+
 </section>
 
 {% if news.has_other_pages %}
-<div class="flex justify-center items-center gap-4 mt-10 text-sm">
-  {% if news.has_previous %}
+
+<div class="flex justify-center gap-4 mt-12">
+
+    {% if news.has_previous %}
     <a href="?page={{ news.previous_page_number }}"
        class="text-primary hover:underline">
-      ← Previous
+        ← Previous
     </a>
-  {% endif %}
+    {% endif %}
 
-  <span class="text-gray-600">
-    Page {{ news.number }} of {{ news.paginator.num_pages }}
-  </span>
+    <span>
+        Page {{ news.number }} of {{ news.paginator.num_pages }}
+    </span>
 
-  {% if news.has_next %}
+    {% if news.has_next %}
     <a href="?page={{ news.next_page_number }}"
        class="text-primary hover:underline">
-      Next →
+        Next →
     </a>
-  {% endif %}
+    {% endif %}
+
 </div>
+
 {% endif %}
 
 {% endblock %}

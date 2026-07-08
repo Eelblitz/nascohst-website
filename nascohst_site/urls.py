@@ -40,7 +40,7 @@ class NewsSitemap(Sitemap):
         return obj.published_at
 
     def location(self, obj):
-        return reverse('news:news_detail', args=[obj.pk])
+        return reverse("news:news_detail_slug", args=[obj.slug])
 
 
 class ProgrammeSitemap(Sitemap):

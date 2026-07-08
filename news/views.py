@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.utils.timezone import now
-
+from django.db.models import Q
 from .models import News, Category
 
 
 def news_list(request):
+    search_query = request.GET.get("q", "")
+    category_slug = request.GET.get("category", "")
+
     queryset = (
         News.objects.filter(
             status=News.PUBLISHED,
@@ -15,11 +18,26 @@ def news_list(request):
         .order_by("-featured", "-published_at")
     )
 
+    if search_query:
+        queryset = queryset.filter(
+            Q(title__icontains=search_query)
+            | Q(excerpt__icontains=search_query)
+            | Q(content__icontains=search_query)
+            | Q(author__name__icontains=search_query)
+            | Q(category__name__icontains=search_query)
+        )
+
+    if category_slug:
+        queryset = queryset.filter(category__slug=category_slug)
+
+    featured_article = queryset.filter(featured=True).first()
+
+    if featured_article:
+        queryset = queryset.exclude(pk=featured_article.pk)
+
     paginator = Paginator(queryset, 6)
     page_number = request.GET.get("page")
     news = paginator.get_page(page_number)
-
-    featured_article = queryset.filter(featured=True).first()
 
     categories = Category.objects.all()
 
@@ -30,31 +48,58 @@ def news_list(request):
             "news": news,
             "featured_article": featured_article,
             "categories": categories,
+            "search_query": search_query,
+            "selected_category": category_slug,
         },
     )
 
-
 def news_detail(request, pk):
-    article = get_object_or_404(
-        News.objects.select_related("author", "category"),
+
+    news = get_object_or_404(
+        News,
         pk=pk,
         status=News.PUBLISHED,
+        published_at__lte=now()
+    )
+
+    related_articles = News.objects.filter(
+        status=News.PUBLISHED
+    ).filter(
+        Q(category=news.category) | Q(author=news.author)
+    ).exclude(
+        pk=news.pk
+    ).distinct()[:3]
+
+    return render(request, "news/news_detail.html", {
+        "news": news,
+        "related_articles": related_articles,
+    })
+    
+    
+def news_detail_slug(request, slug):
+
+    news = get_object_or_404(
+        News,
+        slug=slug,
+        status=News.PUBLISHED,
+        published_at__lte=now(),
     )
 
     related_articles = (
-        News.objects.filter(
-            category=article.category,
-            status=News.PUBLISHED,
+        News.objects.filter(status=News.PUBLISHED)
+        .filter(
+            Q(category=news.category) |
+            Q(author=news.author)
         )
-        .exclude(pk=article.pk)
-        .select_related("author", "category")[:3]
+        .exclude(pk=news.pk)
+        .distinct()[:3]
     )
 
     return render(
         request,
         "news/news_detail.html",
         {
-            "news": article,
+            "news": news,
             "related_articles": related_articles,
         },
     )

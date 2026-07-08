@@ -1,3 +1,5 @@
+import math
+
 from django.db import models
 from django.utils.text import slugify
 
@@ -133,6 +135,16 @@ class News(models.Model):
                 self.excerpt = plain_text
 
         super().save(*args, **kwargs)
+
+    def reading_time(self):
+        """
+        Estimate reading time based on 200 words per minute.
+        """
+        if not self.content:
+            return 1
+
+        words = len(self.content.split())
+        return max(1, math.ceil(words / 200))
 
     def __str__(self):
         return self.title
