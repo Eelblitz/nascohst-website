@@ -3,15 +3,69 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
+
     <title>{% block title %}NasCOHST{% endblock %}</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Inter Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SEO -->
+    <meta name="description"
+          content="{% block meta_description %}Official website of Nasarawa State College of Health Sciences and Technology (NasCOHST), Keffi. Academic programmes, admissions, research, publications, news and institutional updates.{% endblock %}">
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <meta name="author" content="Nasarawa State College of Health Sciences and Technology">
+
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+
+    <meta property="og:site_name" content="NasCOHST">
+
+    <meta property="og:title"
+          content="{% block og_title %}{% block title %}NasCOHST{% endblock %}{% endblock %}">
+
+    <meta property="og:description"
+          content="{% block og_description %}Official website of NasCOHST.{% endblock %}">
+
+    <meta property="og:type" content="website">
+
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+
+    {% block og_image %}
+    {% endblock %}
+
+    <!-- Twitter -->
+
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="twitter:title"
+          content="{% block twitter_title %}{% block title %}NasCOHST{% endblock %}{% endblock %}">
+
+    <meta name="twitter:description"
+          content="{% block twitter_description %}Official website of NasCOHST.{% endblock %}">
+
+    {% block twitter_image %}
+    {% endblock %}
+
+    <!-- Canonical URL -->
+
+    <link rel="canonical"
+          href="{{ request.build_absolute_uri }}">
+
+    <!-- Inter Font -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{% static 'css/styles.css' %}">
+
 </head>
 
 <body class="bg-soft text-charcoal">
