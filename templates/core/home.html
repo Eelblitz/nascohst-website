@@ -180,13 +180,13 @@
         </p>
 
         <h3 class="font-semibold mb-3">
-          <a href="{% url 'news:news_detail' item.pk %}" class="hover:underline">
+          <a href="{% url 'news:news_detail_slug' item.slug %}" class="hover:underline">
             {{ item.title }}
           </a>
         </h3>
 
-        <p class="text-sm text-gray-600">
-          {{ item.content|truncatewords:20 }}
+        <p class="text-sm text-gray-600 leading-7">
+          {{ item.excerpt|truncatewords:20 }}
         </p>
       </div>
     {% empty %}

@@ -67,7 +67,7 @@ class SchoolSitemap(Sitemap):
 
 urlpatterns = [
     path("manage/portal/", admin.site.urls),
-
+    path("ckeditor5/", include("django_ckeditor_5.urls")),
     path("", include("core.urls")),
     path("staff/", include("staff.urls")),
     path("academics/", include("academics.urls")),

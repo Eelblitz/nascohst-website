@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.utils.timezone import now
-from django.db.models import Q
+from django.db.models import Q, F
+
 from .models import News, Category
 
 
@@ -40,6 +41,14 @@ def news_list(request):
     news = paginator.get_page(page_number)
 
     categories = Category.objects.all()
+    popular_articles = (
+        News.objects.filter(
+            status=News.PUBLISHED,
+            published_at__lte=now(),
+        )
+        .exclude(pk=featured_article.pk if featured_article else None)
+        .order_by("-views")[:5]
+    )
 
     return render(
         request,
@@ -47,6 +56,7 @@ def news_list(request):
         {
             "news": news,
             "featured_article": featured_article,
+            "popular_articles": popular_articles,
             "categories": categories,
             "search_query": search_query,
             "selected_category": category_slug,
@@ -59,31 +69,30 @@ def news_detail(request, pk):
         News,
         pk=pk,
         status=News.PUBLISHED,
-        published_at__lte=now()
-    )
-
-    related_articles = News.objects.filter(
-        status=News.PUBLISHED
-    ).filter(
-        Q(category=news.category) | Q(author=news.author)
-    ).exclude(
-        pk=news.pk
-    ).distinct()[:3]
-
-    return render(request, "news/news_detail.html", {
-        "news": news,
-        "related_articles": related_articles,
-    })
-    
-    
-def news_detail_slug(request, slug):
-
-    news = get_object_or_404(
-        News,
-        slug=slug,
-        status=News.PUBLISHED,
         published_at__lte=now(),
     )
+    previous_article = (
+        News.objects.filter(
+            status=News.PUBLISHED,
+            published_at__lt=news.published_at
+        )
+        .order_by("-published_at")
+        .first()
+    )
+
+    next_article = (
+        News.objects.filter(
+            status=News.PUBLISHED,
+            published_at__gt=news.published_at
+        )
+        .order_by("published_at")
+        .first()
+    )
+    News.objects.filter(pk=news.pk).update(
+        views=F("views") + 1
+    )
+
+    news.refresh_from_db()
 
     related_articles = (
         News.objects.filter(status=News.PUBLISHED)
@@ -101,5 +110,66 @@ def news_detail_slug(request, slug):
         {
             "news": news,
             "related_articles": related_articles,
+            "previous_article": previous_article,
+            "next_article": next_article,
+        },
+    )
+
+
+def news_detail_slug(request, slug):
+
+    news = get_object_or_404(
+        News,
+        slug=slug,
+        status=News.PUBLISHED,
+        published_at__lte=now(),
+    )
+
+    # Increment views
+    News.objects.filter(pk=news.pk).update(
+        views=F("views") + 1
+    )
+
+    news.refresh_from_db()
+
+    # Previous publication
+    previous_article = (
+        News.objects.filter(
+            status=News.PUBLISHED,
+            published_at__lt=news.published_at,
+        )
+        .order_by("-published_at")
+        .first()
+    )
+
+    # Next publication
+    next_article = (
+        News.objects.filter(
+            status=News.PUBLISHED,
+            published_at__gt=news.published_at,
+        )
+        .order_by("published_at")
+        .first()
+    )
+
+    # Related publications
+    related_articles = (
+        News.objects.filter(status=News.PUBLISHED)
+        .filter(
+            Q(category=news.category) |
+            Q(author=news.author)
+        )
+        .exclude(pk=news.pk)
+        .distinct()[:3]
+    )
+
+    return render(
+        request,
+        "news/news_detail.html",
+        {
+            "news": news,
+            "related_articles": related_articles,
+            "previous_article": previous_article,
+            "next_article": next_article,
         },
     )

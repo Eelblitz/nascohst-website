@@ -15,6 +15,7 @@ class NewsAdmin(admin.ModelAdmin):
         "title",
         "author",
         "category",
+        "views",
         "status",
         "featured",
         "published_at",
@@ -33,11 +34,17 @@ class NewsAdmin(admin.ModelAdmin):
         "content",
     )
 
-    prepopulated_fields = {"slug": ("title",)}
+    prepopulated_fields = {
+        "slug": ("title",)
+    }
 
-    autocomplete_fields = ["author"]
+    autocomplete_fields = [
+        "author",
+    ]
 
-    ordering = ("-published_at",)
+    ordering = (
+        "-published_at",
+    )
 
     list_editable = (
         "featured",
@@ -45,20 +52,29 @@ class NewsAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = (
+        "views",
         "published_at",
         "updated_at",
     )
 
     fieldsets = (
+
         ("Article Information", {
             "fields": (
                 "title",
                 "slug",
                 "excerpt",
                 "content",
-                "image",
             )
         }),
+
+        ("Media", {
+            "fields": (
+                "image",
+                "attachment",
+            )
+        }),
+
         ("Publishing", {
             "fields": (
                 "author",
@@ -67,10 +83,13 @@ class NewsAdmin(admin.ModelAdmin):
                 "featured",
             )
         }),
+
         ("Timestamps", {
             "fields": (
+                "views",
                 "published_at",
                 "updated_at",
             )
         }),
+
     )

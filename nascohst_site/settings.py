@@ -57,30 +57,32 @@ USE_X_FORWARDED_HOST = True
 # --------------------------------------------------
 
 INSTALLED_APPS = [
-    'jazzmin',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sitemaps',
-    'csp',
+    "jazzmin",
 
-    # Media storage
-    'cloudinary',
-    'cloudinary_storage',
+    # Django
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
+
+    # Third-party
+    "csp",
+    "cloudinary",
+    "cloudinary_storage",
+    "django_ckeditor_5",
 
     # Local apps
-    'core',
-    'staff',
-    'news',
-    'gallery',
-    'academics',
-    'students',
-    'appraisal',
+    "core",
+    "staff",
+    "news",
+    "gallery",
+    "academics",
+    "students",
+    "appraisal",
 ]
-
 
 # --------------------------------------------------
 # MIDDLEWARE
@@ -215,6 +217,51 @@ else:
 
 
 # --------------------------------------------------
+# --------------------------------------------------
+# CKEDITOR 5 CONFIGURATION
+# --------------------------------------------------
+
+CKEDITOR_5_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_5_CONFIGS = {
+    "default": {
+        "toolbar": [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "|",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "blockQuote",
+            "insertTable",
+            "imageUpload",
+            "|",
+            "undo",
+            "redo",
+        ],
+        "image": {
+            "toolbar": [
+                "imageTextAlternative",
+                "imageStyle:inline",
+                "imageStyle:block",
+                "imageStyle:side",
+            ]
+        },
+        "table": {
+            "contentToolbar": [
+                "tableColumn",
+                "tableRow",
+                "mergeTableCells",
+            ]
+        },
+    }
+}
+
 
 # --------------------------------------------------
 # UPLOAD LIMITS

@@ -150,6 +150,79 @@
 
 {% endif %}
 
+<!-- Trending Publications -->
+
+{% if popular_articles %}
+
+<section class="mb-20">
+
+    <div class="flex items-center justify-between mb-8">
+
+        <div>
+
+            <p class="text-sm uppercase tracking-widest text-primary font-semibold">
+                Trending
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-2">
+                Most Popular Publications
+            </h2>
+
+        </div>
+
+        <div class="hidden md:block text-sm text-gray-500">
+            Based on publication views
+        </div>
+
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+
+        {% for article in popular_articles %}
+
+        <a href="{% url 'news:news_detail_slug' article.slug %}"
+           class="group bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition">
+
+            <div class="flex items-center justify-between mb-4">
+
+                <span class="text-2xl">
+                    🔥
+                </span>
+
+                <span class="text-xs text-gray-500">
+                    👁 {{ article.views }}
+                </span>
+
+            </div>
+
+            {% if article.category %}
+            <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                {{ article.category.name }}
+            </span>
+            {% endif %}
+
+            <h3 class="font-bold text-gray-900 group-hover:text-primary transition leading-6 mb-3">
+
+                {{ article.title }}
+
+            </h3>
+
+            <p class="text-sm text-gray-500">
+
+                {{ article.published_at|date:"M d, Y" }}
+
+            </p>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
 <section class="mt-24 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
 {% for item in news %}

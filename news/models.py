@@ -2,6 +2,8 @@ import math
 
 from django.db import models
 from django.utils.text import slugify
+from django.utils.html import strip_tags
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 # --------------------------------------------------
@@ -53,21 +55,31 @@ class News(models.Model):
     slug = models.SlugField(
         max_length=220,
         unique=True,
-        blank=True
+        blank=True,
     )
 
     excerpt = models.TextField(
         max_length=300,
         blank=True,
-        help_text="Short summary displayed on the news listing page."
+        help_text="Short summary displayed on the news listing page.",
     )
 
-    content = models.TextField()
+    content = CKEditor5Field(
+        "Content",
+        config_name="default",
+    )
 
     image = models.ImageField(
         upload_to="news/",
         blank=True,
-        null=True
+        null=True,
+    )
+
+    attachment = models.FileField(
+        upload_to="news/documents/",
+        blank=True,
+        null=True,
+        help_text="Upload a PDF, journal, circular or official document.",
     )
 
     author = models.ForeignKey(
@@ -76,7 +88,7 @@ class News(models.Model):
         null=True,
         blank=True,
         related_name="articles",
-        help_text="Staff member who authored this article."
+        help_text="Staff member who authored this article.",
     )
 
     category = models.ForeignKey(
@@ -84,26 +96,31 @@ class News(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="articles"
+        related_name="articles",
     )
 
     featured = models.BooleanField(
         default=False,
-        help_text="Display this article in featured sections."
+        help_text="Display this article in featured sections.",
     )
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default=PUBLISHED
+        default=PUBLISHED,
     )
 
     published_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
 
     updated_at = models.DateTimeField(
-        auto_now=True
+        auto_now=True,
+    )
+
+    views = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of times this publication has been viewed.",
     )
 
     class Meta:
@@ -113,7 +130,7 @@ class News(models.Model):
 
     def save(self, *args, **kwargs):
 
-        # Generate a unique slug
+        # Generate unique slug
         if not self.slug:
             base_slug = slugify(self.title)
             slug = base_slug
@@ -125,14 +142,13 @@ class News(models.Model):
 
             self.slug = slug
 
-        # Generate excerpt automatically
-        if not self.excerpt:
-            plain_text = self.content.strip()
+        # Always generate a clean excerpt from the content
+        plain_text = strip_tags(self.content).strip()
 
-            if len(plain_text) > 300:
-                self.excerpt = plain_text[:297].rstrip() + "..."
-            else:
-                self.excerpt = plain_text
+        if len(plain_text) > 300:
+            self.excerpt = plain_text[:297].rstrip() + "..."
+        else:
+            self.excerpt = plain_text
 
         super().save(*args, **kwargs)
 
@@ -143,7 +159,7 @@ class News(models.Model):
         if not self.content:
             return 1
 
-        words = len(self.content.split())
+        words = len(strip_tags(self.content).split())
         return max(1, math.ceil(words / 200))
 
     def __str__(self):
