@@ -4,463 +4,618 @@
 
 {% block content %}
 
-<div class="max-w-5xl mx-auto">
+<!-- ========================================= -->
+<!-- Breadcrumb -->
+<!-- ========================================= -->
 
-    <!-- Breadcrumb -->
-    <nav class="mb-5 pb-4 border-b border-gray-100" aria-label="Breadcrumb">
+<!-- ================================================= -->
+<!-- Breadcrumb -->
+<!-- ================================================= -->
 
-        <ol class="flex flex-wrap items-center gap-1.5 text-sm text-gray-500">
+<!-- ================================================= -->
+<!-- Breadcrumb -->
+<!-- ================================================= -->
 
-            <li class="flex items-center">
-                <a href="{% url 'home' %}"
-                   class="flex items-center gap-1.5 hover:text-primary transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-                    <svg class="w-5 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
-                    </svg>
-                    <span class="sr-only">Home</span>
-                </a>
-            </li>
+<nav class="mb-15 text-sm" aria-label="Breadcrumb">
 
-            <li class="flex items-center gap-1.5">
-                <svg class="w-5 h-10 text-gray-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-                <a href="{% url 'news:news_list' %}"
-                   class="hover:text-primary transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-                    Publications
-                </a>
-            </li>
+    <ol class="flex flex-wrap items-center text-gray-500">
 
-            {% if news.category %}
-            <li class="flex items-center gap-1.5">
-                <svg class="w-5 h-10 text-gray-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-                <a href="{% url 'news:news_list' %}?category={{ news.category.slug }}"
-                   class="hover:text-primary transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-                    {{ news.category.name }}
-                </a>
-            </li>
-            {% endif %}
+        <li>
+            <a href="{% url 'home' %}"
+               class="hover:text-primary transition-colors">
 
-            <li class="flex items-center gap-1.5 min-w-0">
-                <svg class="w-10 h-10 text-gray-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-                <span class="font-medium text-gray-800 truncate" aria-current="page">
-                    {{ news.title }}
-                </span>
-            </li>
+                Home
 
-        </ol>
+            </a>
+        </li>
 
-    </nav>
+        <li class="mx-3 text-gray-300">/</li>
 
-    <!-- Category -->
-    {% if news.category %}
-    <span class="inline-flex items-center bg-green-100 text-green-700 text-xs font-semibold tracking-wide uppercase px-4 py-1.5 rounded-full mb-5">
-        {{ news.category.name }}
-    </span>
-    {% endif %}
+        <li>
+            <a href="{% url 'news:news_list' %}"
+               class="hover:text-primary transition-colors">
 
-    <!-- Title -->
-    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8">
-        {{ news.title }}
-    </h1>
+                Publications
 
-    <!-- Article Meta -->
-    <div class="flex flex-wrap items-center gap-6 mb-10 pb-8 border-b border-gray-100 text-gray-600">
+            </a>
+        </li>
 
-        {% if news.author %}
-        <div class="flex items-center gap-3">
+        {% if news.category %}
 
-            {% if news.author.photo %}
-            <img
-                src="{{ news.author.photo.url }}"
-                alt="{{ news.author.name }}"
-                class="w-10 h-10 shrink-0 rounded-full object-cover"
-            >
-            {% else %}
-            <div class="w-12 h-12 shrink-0 rounded-full bg-green-100 flex items-center justify-center text-primary font-bold">
-                {{ news.author.name|first }}
-            </div>
-            {% endif %}
+        <li class="mx-3 text-gray-300">/</li>
 
-            <div class="min-w-0">
-                <p class="font-semibold text-gray-900 leading-snug truncate">
-                    {{ news.author.name }}
-                </p>
-                <p class="text-sm text-gray-500 leading-snug truncate">
-                    {{ news.author.department }}
-                </p>
+        <li>
+
+            <a href="{% url 'news:news_list' %}?category={{ news.category.slug }}"
+               class="hover:text-primary transition-colors">
+
+                {{ news.category.name }}
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+        <li class="mx-3 text-gray-300">/</li>
+
+        <li class="text-gray-900 font-semibold truncate">
+
+            {{ news.title }}
+
+        </li>
+
+    </ol>
+
+</nav>
+<!-- ========================================= -->
+<!-- Article + Sidebar Wrapper -->
+<!-- ========================================= -->
+
+<div class="news-layout">
+
+    <!-- ========================================= -->
+    <!-- LEFT COLUMN -->
+    <!-- ========================================= -->
+
+    <section>
+
+        {% if news.category %}
+
+        <span class="inline-flex bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+
+            {{ news.category.name }}
+
+        </span>
+
+        {% endif %}
+
+        <h1 class="text-4xl font-bold text-gray-900 mb-8">
+
+            {{ news.title }}
+
+        </h1>
+
+        <!-- Meta -->
+
+        <div class="bg-white rounded-2xl shadow-sm border p-6 mb-10">
+
+            <div class="flex items-center justify-between">
+
+                <div class="flex items-center gap-4">
+
+                    {% if news.author %}
+
+                        {% if news.author.photo %}
+
+                        <img
+                            src="{{ news.author.photo.url }}"
+                            alt="{{ news.author.name }}"
+                            class="w-14 h-14 rounded-full object-cover">
+
+                        {% else %}
+
+                        <div class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+
+                            {{ news.author.name|first }}
+
+                        </div>
+
+                        {% endif %}
+
+                        <div>
+
+                            <h3 class="font-semibold">
+
+                                {{ news.author.name }}
+
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+
+                                {{ news.author.department }}
+
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="text-right text-sm text-gray-500">
+
+                    <div>
+
+                        <strong>Published</strong><br>
+
+                        {{ news.published_at|date:"F j, Y" }}
+
+                    </div>
+
+                    <div class="mt-2">
+
+                        <strong>Reading Time</strong><br>
+
+                        {{ news.reading_time }} min
+
+                    </div>
+
+                    <div class="mt-2">
+
+                        <strong>Views</strong><br>
+
+                        👁 {{ news.views }}
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
 
-        <span class="hidden sm:block w-px h-10 bg-gray-200" aria-hidden="true"></span>
+        {% if news.image %}
+
+        <img
+            src="{{ news.image.url }}"
+            alt="{{ news.title }}"
+            class="w-full rounded-2xl shadow-lg mb-10">
+
         {% endif %}
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <!-- Article -->
 
-    <div>
-        <p class="text-xs uppercase tracking-wider text-gray-400">
-            Published
-        </p>
+<article class="bg-white rounded-2xl shadow-sm border p-8 leading-relaxed text-gray-700">
 
-        <p class="font-semibold text-gray-800 mt-1">
-            {{ news.published_at|date:"F j, Y" }}
-        </p>
-    </div>
+            {{ news.content|safe }}
 
-    <div>
-        <p class="text-xs uppercase tracking-wider text-gray-400">
-            Reading Time
-        </p>
+        </article>
+            <!-- ========================================= -->
+        <!-- Attachment -->
+        <!-- ========================================= -->
 
-        <p class="font-semibold text-gray-800 mt-1">
-            📖 {{ news.reading_time }} min read
-        </p>
-    </div>
+        {% if news.attachment %}
 
-    <div>
-        <p class="text-xs uppercase tracking-wider text-gray-400">
-            Views
-        </p>
+        <section class="mt-10">
 
-        <p class="font-semibold text-gray-800 mt-1">
-            👁 {{ news.views }}
-        </p>
-    </div>
+            <div class="bg-white rounded-2xl shadow-sm border p-6">
 
-</div>
+                <h2 class="text-xl font-bold mb-3">
 
-    </div>
+                    📄 Attached Document
 
-    <!-- Featured Image -->
+                </h2>
 
-    {% if news.image %}
-    <img
-        src="{{ news.image.url }}"
-        alt="{{ news.title }}"
-        class="w-full h-[450px] object-cover rounded-2xl shadow-lg mb-12"
-    >
-    {% endif %}
+                <p class="text-gray-500 mb-5">
 
-    <!-- Article Content -->
+                    Download the official document attached to this publication.
 
-    <article
-    class="max-w-none text-gray-700 leading-9 text-[17px] text-justify
-           [&>p]:mb-6
-           [&>h1]:text-4xl [&>h1]:font-bold [&>h1]:mt-10 [&>h1]:mb-6
-           [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:mt-8 [&>h2]:mb-5
-           [&>h3]:text-2xl [&>h3]:font-semibold [&>h3]:mt-8 [&>h3]:mb-4
-           [&>ul]:list-disc [&>ul]:pl-8 [&>ul]:mb-6
-           [&>ol]:list-decimal [&>ol]:pl-8 [&>ol]:mb-6
-           [&>blockquote]:border-l-4 [&>blockquote]:border-primary
-           [&>blockquote]:pl-6 [&>blockquote]:italic [&>blockquote]:my-8
-           [&>img]:rounded-2xl [&>img]:shadow-lg [&>img]:my-8 [&>img]:mx-auto
-           [&>table]:w-full [&>table]:border [&>table]:border-gray-300
-           [&_th]:border [&_th]:p-3 [&_th]:bg-gray-100
-           [&_td]:border [&_td]:p-3">
+                </p>
 
-    {{ news.content|safe }}
+                <a href="{{ news.attachment.url }}"
+                   target="_blank"
+                   class="inline-flex bg-primary text-white px-6 py-3 rounded-xl hover:bg-green-800 transition">
 
-</article>
+                    Download PDF
 
-    <!--attachment-->
-   {% if news.attachment %}
-
-<section class="mt-12">
-
-    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
-            <div class="flex items-start gap-4">
-
-                <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-2xl">
-                    📄
-                </div>
-
-                <div>
-
-                    <p class="text-sm uppercase tracking-wide text-primary font-semibold">
-                        Attached Document
-                    </p>
-
-                    <h3 class="text-sm font-bold text-gray-900 mt-1">
-                        {{ news.attachment.name|cut:"news/documents/" }}
-                    </h3>
-
-                    <p class="text-gray-500 mt-2">
-                        Download the attached PDF document for additional information and reference.
-                    </p>
-
-                </div>
+                </a>
 
             </div>
 
-            <a href="{{ news.attachment.url }}"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="inline-flex items-center gap-2 bg-primary hover:bg-green-800 text-white px-4 py-3 rounded-xl font-semibold transition">
+        </section>
 
-                📥 Download PDF
+        {% endif %}
 
-            </a>
+        <!-- ========================================= -->
+        <!-- About the Author -->
+        <!-- ========================================= -->
+
+        {% if news.author %}
+
+        <section class="mt-12">
+
+            <div class="bg-white rounded-2xl shadow-sm border p-8">
+
+                <h2 class="text-2xl font-bold mb-8">
+
+                    About the Author
+
+                </h2>
+
+                <div class="flex gap-6 items-start">
+
+                    {% if news.author.photo %}
+
+                        <img
+                            src="{{ news.author.photo.url }}"
+                            alt="{{ news.author.name }}"
+                            class="w-32 h-32 rounded-full object-cover">
+
+                    {% else %}
+
+                        <div class="w-32 h-32 rounded-full bg-primary text-white flex items-center justify-center text-5xl font-bold">
+
+                            {{ news.author.name|first }}
+
+                        </div>
+
+                    {% endif %}
+
+                    <div>
+
+                        <h3 class="text-2xl font-bold">
+
+                            {{ news.author.name }}
+
+                        </h3>
+
+                        <p class="text-primary font-semibold mt-2">
+
+                            {{ news.author.designation }}
+
+                        </p>
+
+                        {% if news.author.department %}
+
+                        <p class="text-gray-500 mt-2">
+
+                            {{ news.author.department }}
+
+                        </p>
+
+                        {% endif %}
+
+                        {% if news.author.qualifications %}
+
+                        <p class="mt-4">
+
+                            {{ news.author.qualifications }}
+
+                        </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% if news.author.biography %}
+
+                <div class="mt-8 text-gray-700 leading-relaxed">
+
+                    {{ news.author.biography|linebreaks }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+        {% endif %}
+<!-- ================================================= -->
+<!-- Share Publication -->
+<!-- ================================================= -->
+
+<section class="mt-12">
+
+    <div class="bg-white rounded-2xl border shadow-sm px-8 py-6">
+
+        <div class="flex items-center justify-between flex-wrap gap-4">
+
+            <div>
+
+                <h2 class="text-lg font-bold text-gray-900">
+                    Share this publication
+                </h2>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Share this article or copy the link for future reference.
+                </p>
+
+            </div>
+
+            <div class="flex items-center gap-3">
+
+                <a href="https://wa.me/?text={{ request.build_absolute_uri|urlencode }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="px-4 py-2 rounded-full border hover:bg-green-50 transition">
+
+                    WhatsApp
+
+                </a>
+
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="px-4 py-2 rounded-full border hover:bg-green-50 transition">
+
+                    LinkedIn
+
+                </a>
+
+                <button
+                    onclick="copyPublicationLink()"
+                    class="px-4 py-2 rounded-full bg-primary text-white">
+
+                    Copy Link
+
+                </button>
+
+            </div>
 
         </div>
 
     </div>
 
 </section>
+<!-- ========================================= -->
+<!-- Previous / Next Publication -->
+<!-- ========================================= -->
 
-{% endif %}
-
-    <!-- About the Author -->
-
-    {% if news.author %}
-    <section class="mt-20 pt-12 border-t border-gray-100">
-
-        <h2 class="text-2xl font-bold text-gray-900 mb-8">
-            About the Author
-        </h2>
-
-        <div class="max-w-3xl mx-auto">
-
-            <div class="flex justify-center mb-6">
-
-                {% if news.author.photo %}
-                <img
-                    src="{{ news.author.photo.url }}"
-                    alt="{{ news.author.name }}"
-                    class="w-32 h-32 rounded-full object-cover shadow-md ring-4 ring-white"
-                >
-                {% else %}
-                <div class="w-32 h-32 rounded-full bg-green-100 flex items-center justify-center text-4xl font-bold text-primary shadow-md ring-4 ring-white">
-                    {{ news.author.name|first }}
-                </div>
-                {% endif %}
-
-            </div>
-
-            <div class="text-center">
-
-                <h3 class="text-2xl font-bold text-gray-900">
-                    {{ news.author.name }}
-                </h3>
-
-                <p class="text-primary font-semibold mt-2">
-                    {{ news.author.designation }}
-                </p>
-
-                {% if news.author.department %}
-                <p class="text-gray-600 mt-1">
-                    {{ news.author.department }}
-                </p>
-                {% endif %}
-
-                {% if news.author.qualifications %}
-                <p class="mt-4 text-sm text-gray-500">
-                    {{ news.author.qualifications }}
-                </p>
-                {% endif %}
-
-            </div>
-
-            {% if news.author.biography %}
-            <div class="mt-8 text-gray-700 leading-8">
-                {{ news.author.biography|linebreaks }}
-            </div>
-            {% endif %}
-
-        </div>
-
-    </section>
-    {% endif %}
-
-<!-- Previous / Next Publications -->
-
-<section class="mt-16 pt-10 border-t border-gray-200">
+<section class="mt-12">
 
     <div class="grid md:grid-cols-2 gap-6">
 
         {% if previous_article %}
         <a href="{% url 'news:news_detail_slug' previous_article.slug %}"
-           class="block bg-white border rounded-2xl p-6 hover:shadow-lg transition">
+           class="group block bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition">
 
             <p class="text-sm text-gray-500 mb-2">
                 ← Previous Publication
             </p>
 
-            <h3 class="font-bold text-lg text-gray-900">
+            <h3 class="font-semibold text-lg text-gray-900 group-hover:text-primary transition leading-snug">
                 {{ previous_article.title }}
             </h3>
 
         </a>
+        {% else %}
+        <div></div>
         {% endif %}
+
 
         {% if next_article %}
         <a href="{% url 'news:news_detail_slug' next_article.slug %}"
-           class="block bg-white border rounded-2xl p-6 hover:shadow-lg transition text-right">
+           class="group block bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition text-right">
 
             <p class="text-sm text-gray-500 mb-2">
                 Next Publication →
             </p>
 
-            <h3 class="font-bold text-lg text-gray-900">
+            <h3 class="font-semibold text-lg text-gray-900 group-hover:text-primary transition leading-snug">
                 {{ next_article.title }}
             </h3>
 
         </a>
+        {% else %}
+        <div></div>
         {% endif %}
 
     </div>
 
 </section>
+    </section>
 
-<!-- Share Publication -->
-<section class="mt-16 border-t border-gray-200 pt-10 bg-green-50 rounded-2xl">
+    <!-- ========================================= -->
+    <!-- RIGHT SIDEBAR -->
+    <!-- ========================================= -->
 
-    <div class="flex flex-col items-center text-center gap-6 py-8 px-4">
+    <aside class="news-sidebar">
 
-        <div class="order-1">
-            <h2 class="text-2xl font-bold text-gray-900">
-                Share this Publication
+        <div class="bg-white rounded-2xl shadow-sm border p-6 mb-8">
+
+            <h2 class="text-xl font-bold mb-6">
+
+                🔥 Most Read
+
             </h2>
 
-            <p class="text-gray-500 mt-2">
-                Share this article with colleagues, students and the public.
-            </p>
-        </div>
+            {% for article in popular_articles %}
 
-        <div class="order-2 flex flex-wrap justify-center gap-4">
-
-            <a href="https://wa.me/?text={{ request.build_absolute_uri|urlencode }}"
-               target="_blank"
-               rel="noopener noreferrer"
-               style="background:#25D366;color:white;padding:12px 20px;border-radius:12px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.28-1.38c1.44.79 3.06 1.2 4.71 1.2h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0012.04 2m0 1.67c2.2 0 4.27.86 5.82 2.42a8.2 8.2 0 012.42 5.82c0 4.55-3.7 8.25-8.25 8.25-1.44 0-2.86-.38-4.1-1.09l-.29-.17-3.13.82.84-3.05-.19-.31a8.18 8.18 0 01-1.26-4.39c0-4.55 3.7-8.25 8.25-8.25M8.53 6.84c-.16 0-.42.06-.64.31-.22.25-.85.83-.85 2.02 0 1.19.87 2.34.99 2.5.12.16 1.71 2.71 4.23 3.71 2.09.84 2.52.67 2.97.63.45-.04 1.46-.6 1.66-1.18.21-.58.21-1.08.15-1.18-.06-.1-.22-.16-.46-.28-.24-.12-1.46-.72-1.68-.8-.23-.08-.39-.12-.56.12-.16.24-.63.79-.78.96-.14.16-.29.18-.53.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.29.36-.43.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.56-1.36-.78-1.86-.2-.48-.4-.42-.56-.43-.14-.01-.3-.01-.46-.01z"/>
-                </svg>
-                WhatsApp
-            </a>
-
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}"
-               target="_blank"
-               rel="noopener noreferrer"
-               style="background:#1877F2;color:white;padding:12px 20px;border-radius:12px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.16 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.78 8.44-4.94 8.44-9.94z"/>
-                </svg>
-                Facebook
-            </a>
-
-            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ news.title|urlencode }}"
-               target="_blank"
-               rel="noopener noreferrer"
-               style="background:#000;color:white;padding:12px 20px;border-radius:12px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M18.9 2H22l-7.4 8.44L23.3 22h-6.9l-5.4-6.98L4.6 22H1.5l7.9-9.03L.9 2h7.1l4.9 6.4L18.9 2zm-1.2 18h1.9L7.4 4H5.4l12.3 16z"/>
-                </svg>
-                X
-            </a>
-
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}"
-               target="_blank"
-               rel="noopener noreferrer"
-               style="background:#0A66C2;color:white;padding:12px 20px;border-radius:12px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 110-4.14 2.07 2.07 0 010 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/>
-                </svg>
-                LinkedIn
-            </a>
-
-
-            <button
-    id="copyLinkBtn"
-    type="button"
-    class="px-4 py-2 rounded-xl border border-gray-300 bg-white font-medium hover:bg-gray-100 transition">
-
-    🔗 Copy Link
-
-    </button>
-        </div>
-        
-    </div>
-
-</section>
-
-
-    {% if related_articles %}
-
-    <section class="mt-20 pt-12 border-t border-gray-100">
-
-        <div class="flex items-center justify-between mb-8">
-
-            <h2 class="text-3xl font-bold text-gray-900">
-                Related Publications
-            </h2>
-
-            <a href="{% url 'news:news_list' %}"
-               class="text-primary hover:underline font-medium rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-                View All →
-            </a>
-
-        </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {% for article in related_articles %}
-
-            <article class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 overflow-hidden border border-gray-100">
-
-                {% if article.image %}
-                <div class="overflow-hidden">
-                    <img
-                        src="{{ article.image.url }}"
-                        alt="{{ article.title }}"
-                        class="h-48 w-full object-cover group-hover:scale-105 transition duration-500"
-                    >
-                </div>
-                {% endif %}
-
-                <div class="p-6">
-
-                    {% if article.category %}
-                    <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                        {{ article.category.name }}
-                    </span>
-                    {% endif %}
-
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 leading-snug">
-                        <a href="{% url 'news:news_detail_slug' article.slug %}"
-                           class="hover:text-primary transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-                            {{ article.title }}
-                        </a>
-                    </h3>
-
-                    <p class="text-gray-600 text-sm leading-relaxed mb-5">
-                        {{ article.excerpt|truncatewords:18 }}
-                    </p>
+                <div class="mb-6">
 
                     <a href="{% url 'news:news_detail_slug' article.slug %}"
-                       class="text-primary font-semibold hover:underline rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-                        Read Publication →
+                       class="font-semibold hover:text-primary">
+
+                        {{ article.title }}
+
                     </a>
+
+                    <p class="text-sm text-gray-500 mt-2">
+
+                        👁 {{ article.views }} views
+
+                    </p>
 
                 </div>
 
-            </article>
+            {% empty %}
+
+                <p class="text-gray-500">
+
+                    No publications available.
+
+                </p>
+
+            {% endfor %}
+
+        </div>
+    
+            <!-- ========================================= -->
+        <!-- Recent Publications -->
+        <!-- ========================================= -->
+
+        <div class="bg-white rounded-2xl shadow-sm border p-6 mb-8">
+
+            <h2 class="text-xl font-bold mb-6">
+                📰 Recent Publications
+            </h2>
+
+            {% for article in recent_articles %}
+
+                <div class="mb-6">
+
+                    <a href="{% url 'news:news_detail_slug' article.slug %}"
+                       class="font-semibold hover:text-primary">
+
+                        {{ article.title }}
+
+                    </a>
+
+                    <p class="text-sm text-gray-500 mt-2">
+
+                        {{ article.published_at|date:"F j, Y" }}
+
+                    </p>
+
+                </div>
+
+            {% empty %}
+
+                <p class="text-gray-500">
+                    No recent publications.
+                </p>
 
             {% endfor %}
 
         </div>
 
-    </section>
+        <!-- ========================================= -->
+        <!-- Categories -->
+        <!-- ========================================= -->
 
-    {% endif %}
+        <div class="bg-white rounded-2xl shadow-sm border p-6 mb-8">
+
+            <h2 class="text-xl font-bold mb-6">
+                📂 Categories
+            </h2>
+
+            {% for category in categories %}
+
+                <div class="flex justify-between items-center mb-4">
+
+                    <a href="{% url 'news:news_list' %}?category={{ category.slug }}"
+                       class="hover:text-primary">
+
+                        {{ category.name }}
+
+                    </a>
+
+                    <span class="text-sm text-gray-500">
+
+                        {{ category.article_count }}
+
+                    </span>
+
+                </div>
+
+            {% empty %}
+
+                <p class="text-gray-500">
+                    No categories available.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- Latest Comments -->
+        <!-- ========================================= -->
+
+        <div class="bg-white rounded-2xl shadow-sm border p-6 mb-8">
+
+            <h2 class="text-xl font-bold mb-6">
+                💬 Latest Comments
+            </h2>
+
+            {% for comment in latest_comments %}
+
+                <div class="mb-6">
+
+                    <p class="font-semibold">
+
+                        {{ comment.name }}
+
+                    </p>
+
+                    <p class="text-sm text-gray-500 mt-2">
+
+                        "{{ comment.body|truncatewords:12 }}"
+
+                    </p>
+
+                    <a href="{% url 'news:news_detail_slug' comment.news.slug %}"
+                       class="text-primary text-sm">
+
+                        {{ comment.news.title }}
+
+                    </a>
+
+                </div>
+
+            {% empty %}
+
+                <p class="text-gray-500">
+                    No comments yet.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- Admissions -->
+        <!-- ========================================= -->
+
+        <div class="bg-primary rounded-2xl p-8 text-white">
+
+            <h2 class="text-2xl font-bold mb-4">
+
+                Study at NasCOHST
+
+            </h2>
+
+            <p class="leading-relaxed">
+
+                Begin your journey towards a rewarding career in Health Sciences and Technology.
+
+            </p>
+
+            <a href="/admissions/"
+               class="inline-flex mt-6 bg-white text-primary px-5 py-3 rounded-xl font-semibold">
+
+                Apply for Admission →
+
+            </a>
+
+        </div>
+
+    </aside>
 
 </div>
-
 {% endblock %}

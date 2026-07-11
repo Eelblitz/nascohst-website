@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import News, Category
+from .models import News, Category, Comment
 
 
 @admin.register(Category)
@@ -15,9 +15,9 @@ class NewsAdmin(admin.ModelAdmin):
         "title",
         "author",
         "category",
-        "views",
         "status",
         "featured",
+        "views",
         "published_at",
     )
 
@@ -34,17 +34,11 @@ class NewsAdmin(admin.ModelAdmin):
         "content",
     )
 
-    prepopulated_fields = {
-        "slug": ("title",)
-    }
+    prepopulated_fields = {"slug": ("title",)}
 
-    autocomplete_fields = [
-        "author",
-    ]
+    autocomplete_fields = ["author"]
 
-    ordering = (
-        "-published_at",
-    )
+    ordering = ("-published_at",)
 
     list_editable = (
         "featured",
@@ -52,29 +46,22 @@ class NewsAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = (
-        "views",
         "published_at",
         "updated_at",
+        "views",
     )
 
     fieldsets = (
-
         ("Article Information", {
             "fields": (
                 "title",
                 "slug",
                 "excerpt",
                 "content",
-            )
-        }),
-
-        ("Media", {
-            "fields": (
                 "image",
                 "attachment",
             )
         }),
-
         ("Publishing", {
             "fields": (
                 "author",
@@ -83,13 +70,73 @@ class NewsAdmin(admin.ModelAdmin):
                 "featured",
             )
         }),
-
-        ("Timestamps", {
+        ("Statistics", {
             "fields": (
                 "views",
+            )
+        }),
+        ("Timestamps", {
+            "fields": (
                 "published_at",
                 "updated_at",
             )
         }),
+    )
 
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "name",
+        "news",
+        "approved",
+        "created_at",
+    )
+
+    list_filter = (
+        "approved",
+        "created_at",
+    )
+
+    search_fields = (
+        "name",
+        "email",
+        "body",
+        "news__title",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+    list_editable = (
+        "approved",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+    fieldsets = (
+        ("Comment", {
+            "fields": (
+                "news",
+                "name",
+                "email",
+                "body",
+            )
+        }),
+        ("Moderation", {
+            "fields": (
+                "approved",
+            )
+        }),
+        ("Timestamps", {
+            "fields": (
+                "created_at",
+                "updated_at",
+            )
+        }),
     )

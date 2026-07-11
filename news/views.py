@@ -1,9 +1,10 @@
+from .models import News, Category, Comment
+from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.utils.timezone import now
-from django.db.models import Q, F
+from django.db.models import Q, F, Count
 
-from .models import News, Category
 
 
 def news_list(request):
@@ -163,13 +164,75 @@ def news_detail_slug(request, slug):
         .distinct()[:3]
     )
 
+    # Most read
+    popular_articles = (
+        News.objects.filter(status=News.PUBLISHED)
+        .exclude(pk=news.pk)
+        .order_by("-views")[:5]
+    )
+
+    # Recent publications
+    recent_articles = (
+        News.objects.filter(status=News.PUBLISHED)
+        .exclude(pk=news.pk)
+        .order_by("-published_at")[:5]
+    )
+
+    # Categories with article count
+    categories = (
+        Category.objects.annotate(
+            article_count=Count("articles")
+        )
+        .order_by("name")
+    )
+
+    # Latest approved comments
+    latest_comments = (
+        Comment.objects.filter(approved=True)
+        .select_related("news")
+        .order_by("-created_at")[:5]
+    )
+
+    # Approved comments for this article
+    comments = news.comments.filter(
+        approved=True
+    )
+
+    # Comment form
+    comment_submitted = False
+
+    if request.method == "POST":
+
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+
+            comment = form.save(commit=False)
+            comment.news = news
+            comment.save()
+
+            comment_submitted = True
+
+            form = CommentForm()
+
+    else:
+
+        form = CommentForm()
+
     return render(
         request,
         "news/news_detail.html",
         {
             "news": news,
-            "related_articles": related_articles,
             "previous_article": previous_article,
             "next_article": next_article,
+            "related_articles": related_articles,
+            "popular_articles": popular_articles,
+            "recent_articles": recent_articles,
+            "categories": categories,
+            "latest_comments": latest_comments,
+            "comments": comments,
+            "comment_form": form,
+            "comment_submitted": comment_submitted,
         },
     )

@@ -87,3 +87,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 });
+
+function copyPublicationLink() {
+
+    navigator.clipboard.writeText(window.location.href);
+
+    alert("Publication link copied successfully.");
+
+}

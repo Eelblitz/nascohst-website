@@ -247,48 +247,123 @@ button, input, select, textarea {
 }
 
 @media (min-width: 1024px) {
-  .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  .lg\:grid {
+    display: grid;
+  }
+
+  .lg\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:col-span-8 {
+    grid-column: span 8 / span 8;
+  }
+
+  .lg\:col-span-4 {
+    grid-column: span 4 / span 4;
+  }
+
+  .lg\:sticky {
+    position: sticky;
+  }
+
+  .lg\:top-24 {
+    top: 6rem;
+  }
+
 }
 
-.prose {
-  line-height: 1.75;
-  max-width: 65ch;
+.gap-10 {
+  gap: 2.5rem;
 }
 
-.stats-grid { display: grid; gap: 1rem; }
-
-.stat-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 1rem; padding: 1.5rem; }
-
-.footer-gold {
-    background: #D4AF37;
-    color: #1F2937;
-    margin-top: 4rem;
+.divide-y>*+* {
+  border-top: 1px solid #E5E7EB;
 }
 
-.footer-gold .text-white,
-.footer-gold .font-semibold {
-    color: #0F5D3B;
+/* =====================================
+   Publication Page
+===================================== */
+
+.news-layout {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
 }
 
-.footer-gold a {
-    color: #1F2937;
-    transition: color 0.2s ease;
+.news-sidebar {
+  position: sticky;
+  top: 100px;
+  align-self: start;
 }
 
-.footer-gold a:hover {
-    color: #065F46;
+@media (max-width:1023px) {
+
+  .news-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .news-sidebar {
+    position: static;
+  }
+
 }
 
-.footer-gold .text-gray-300,
-.footer-gold .text-gray-400 {
-    color: #374151;
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
-.footer-gold {
-    background: #D4AF37;
-    color: #1F2937;
-    border-top: 5px solid #0F5D3B;
-    margin-top: 4rem;
+.bg-green-600 {
+  background: #16A34A;
 }
-.chart-box { background: #fff; border: 1px solid #E5E7EB; border-radius: 1rem; padding: 1rem; }
+
+.bg-green-700 {
+  background: #15803D;
+}
+
+.bg-blue-600 {
+  background: #2563EB;
+}
+
+.bg-blue-800 {
+  background: #1E40AF;
+}
+
+.bg-black {
+  background: #000;
+}
+
+.hover\:bg-green-700:hover {
+  background: #15803D;
+}
+
+.border {
+  border: 1px solid #D1D5DB;
+}
+
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ol {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+nav[aria-label="Breadcrumb"]{
+    margin-bottom:5rem;
+}
