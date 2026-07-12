@@ -208,8 +208,8 @@ if ENVIRONMENT == "production":
 else:
     STORAGES = {
         "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-        },
+    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+},
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
         },
