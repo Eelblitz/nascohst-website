@@ -8,6 +8,8 @@ def populate_news_slugs(apps, schema_editor):
     News = apps.get_model('news', 'News')
     for news_item in News.objects.all():
         if not news_item.slug: # Only populate if slug is empty
+            # Generate a slug from the title, or a default if title is also empty
+            # Using news_item.pk to ensure uniqueness even if titles are identical or empty
             base_slug = slugify(news_item.title) if news_item.title else f'news-item-{news_item.pk}'
             unique_slug = base_slug
             counter = 1
@@ -63,6 +65,11 @@ class Migration(migrations.Migration):
             model_name='news',
             name='slug',
             field=models.SlugField(blank=True, max_length=220, default=''), # Temporarily set default to avoid null issues
+        ),
+        # *** NEW: Drop the conflicting index if it exists ***
+        migrations.RunSQL(
+            "DROP INDEX IF EXISTS news_news_slug_2b9132f1_like;",
+            reverse_sql=migrations.RunSQL.noop # No reverse operation needed for dropping an orphaned index
         ),
         # Run Python code to populate unique slugs
         migrations.RunPython(populate_news_slugs, migrations.RunPython.noop),
