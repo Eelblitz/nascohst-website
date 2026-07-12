@@ -7,13 +7,10 @@ from django.utils.text import slugify
 def populate_news_slugs(apps, schema_editor):
     News = apps.get_model('news', 'News')
     for news_item in News.objects.all():
-        if not news_item.slug: # Only populate if slug is empty
-            # Generate a slug from the title, or a default if title is also empty
-            # Using news_item.pk to ensure uniqueness even if titles are identical or empty
+        if not getattr(news_item, 'slug', None):
             base_slug = slugify(news_item.title) if news_item.title else f'news-item-{news_item.pk}'
             unique_slug = base_slug
             counter = 1
-            # Ensure uniqueness, excluding the current item itself
             while News.objects.filter(slug=unique_slug).exclude(pk=news_item.pk).exists():
                 unique_slug = f"{base_slug}-{counter}"
                 counter += 1
@@ -35,11 +32,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100, unique=True)),
                 ('slug', models.SlugField(blank=True, max_length=120, unique=True)),
             ],
-            options=
-                {
-                    'verbose_name_plural': 'Categories',
-                    'ordering': ['name'],
-                },
+            options={'verbose_name_plural': 'Categories', 'ordering': ['name']},
         ),
         migrations.AlterModelOptions(
             name='news',
@@ -48,36 +41,31 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='news',
             name='author',
-            field=models.ForeignKey(blank=True, help_text='Staff member who authored this article.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='articles', to='staff.staff'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='articles', to='staff.staff'),
         ),
         migrations.AddField(
             model_name='news',
             name='excerpt',
-            field=models.TextField(blank=True, help_text='Short summary displayed on the news listing page.', max_length=300),
+            field=models.TextField(blank=True, max_length=300),
         ),
         migrations.AddField(
             model_name='news',
             name='featured',
-            field=models.BooleanField(default=False, help_text='Display this article in featured sections.'),
+            field=models.BooleanField(default=False),
         ),
-        # Add the slug field initially without unique=True
+        # 1. Add as a plain CharField first (prevents auto-creating SlugField indexes)
         migrations.AddField(
             model_name='news',
             name='slug',
-            field=models.SlugField(blank=True, max_length=220, default=''), # Temporarily set default to avoid null issues
+            field=models.CharField(max_length=220, null=True, blank=True),
         ),
-        # *** NEW: Drop the conflicting index if it exists ***
-        migrations.RunSQL(
-            "DROP INDEX IF EXISTS news_news_slug_2b9132f1_like;",
-            reverse_sql=migrations.RunSQL.noop # No reverse operation needed for dropping an orphaned index
-        ),
-        # Run Python code to populate unique slugs
+        # 2. Populate the data
         migrations.RunPython(populate_news_slugs, migrations.RunPython.noop),
-        # Now alter the field to make it unique
+        # 3. Now convert it to a unique SlugField
         migrations.AlterField(
             model_name='news',
             name='slug',
-            field=models.SlugField(blank=True, max_length=220, unique=True),
+            field=models.SlugField(max_length=220, unique=True, null=False),
         ),
         migrations.AddField(
             model_name='news',
