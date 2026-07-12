@@ -71,18 +71,13 @@
 
 <section class="mb-16">
 
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden lg:grid lg:grid-cols-2">
-
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
         {% if featured_article.image %}
-        <img
-            src="{{ featured_article.image.url }}"
-            alt="{{ featured_article.title }}"
-            class="w-full h-[380px] object-cover"
-        >
+        <img src="{{ featured_article.image.url }}" alt="{{ featured_article.title }}" class="w-full h-64 lg:h-[380px] object-cover">
         {% endif %}
 
         <!-- Content -->
-        <div class="p-10 flex flex-col justify-center h-full">
+        <div class="p-6 md:p-10 flex flex-col justify-center">
 
             {% if featured_article.category %}
             <span class="inline-flex w-fit items-center bg-green-100 text-green-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-4">

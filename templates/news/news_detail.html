@@ -100,7 +100,7 @@
 
         <div class="bg-white rounded-2xl shadow-sm border p-6 mb-10">
 
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
 
                 <div class="flex items-center gap-4">
 
@@ -186,7 +186,7 @@
 
         <!-- Article -->
 
-<article class="bg-white rounded-2xl shadow-sm border p-8 leading-relaxed text-gray-700">
+<article class="bg-white rounded-2xl shadow-sm border p-5 md:p-8 leading-relaxed text-gray-700">
 
             {{ news.content|safe }}
 
@@ -243,7 +243,9 @@
 
                 </h2>
 
-                <div class="flex gap-6 items-start">
+                <!-- Change Line 246 -->
+            <div class="flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
+
 
                     {% if news.author.photo %}
 
