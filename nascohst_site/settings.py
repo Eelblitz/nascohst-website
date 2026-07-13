@@ -199,22 +199,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 if ENVIRONMENT == "production":
     STORAGES = {
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "BACKEND": "core.storage.ForgivingManifestStaticFilesStorage",
         },
         "default": {
             "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
         },
     }
-else:
-    STORAGES = {
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-        },
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-    }
-
 # --------------------------------------------------
 # settings.py
 
