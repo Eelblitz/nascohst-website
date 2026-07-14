@@ -1,0 +1,4 @@
+Watching for file changes with StatReloader
+[14/Jul/2026 16:27:28] "GET /news/highlights-from-the-2026-matriculation-ceremony/ HTTP/1.1" 200 27327
+[14/Jul/2026 16:30:47] "GET /news/ HTTP/1.1" 200 17484
+[14/Jul/2026 16:31:08] "GET /news/ HTTP/1.1" 200 17484

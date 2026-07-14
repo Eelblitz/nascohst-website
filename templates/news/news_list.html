@@ -3,13 +3,13 @@
 
 {% block content %}
 
-<section class="mb-12">
+<section class="mb-10 md:mb-12">
 
     <p class="text-sm uppercase tracking-widest text-primary font-semibold mb-2">
         Publications
     </p>
 
-    <h1 class="text-4xl md:text-5xl font-bold text-gray-900">
+    <h1 class="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
         Research, News &amp; Academic Publications
     </h1>
 
@@ -22,21 +22,21 @@
 
 <!-- Search & Filter -->
 
-<form method="get" class="bg-white rounded-2xl shadow-sm border p-6 mb-12">
+<form method="get" class="bg-white rounded-2xl shadow-sm border p-4 md:p-6 mb-10 md:mb-12">
 
-    <div class="grid md:grid-cols-3 gap-4">
+    <div class="grid gap-3 md:grid-cols-3 md:gap-4">
 
         <input
             type="text"
             name="q"
             value="{{ search_query }}"
             placeholder="Search publications..."
-            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none"
+            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none w-full"
         >
 
         <select
             name="category"
-            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none"
+            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none w-full"
         >
 
             <option value="">All Categories</option>
@@ -58,7 +58,7 @@
 
         <button
             type="submit"
-            class="bg-primary text-white rounded-xl px-6 py-3 hover:opacity-90 transition"
+            class="bg-primary text-white rounded-xl px-6 py-3 hover:opacity-90 transition w-full md:w-auto"
         >
             Search
         </button>
@@ -71,18 +71,13 @@
 
 <section class="mb-16">
 
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden lg:grid lg:grid-cols-2">
-
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 news-featured-card">
         {% if featured_article.image %}
-        <img
-            src="{{ featured_article.image.url }}"
-            alt="{{ featured_article.title }}"
-            class="w-full h-[380px] object-cover"
-        >
+        <img src="{{ featured_article.image.url }}" alt="{{ featured_article.title }}" class="w-full h-56 md:h-64 lg:h-[380px] object-cover news-featured-image">
         {% endif %}
 
         <!-- Content -->
-        <div class="p-10 flex flex-col justify-center h-full">
+        <div class="p-5 md:p-10 flex flex-col justify-center news-featured-content">
 
             {% if featured_article.category %}
             <span class="inline-flex w-fit items-center bg-green-100 text-green-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-4">
@@ -90,7 +85,7 @@
             </span>
             {% endif %}
 
-            <h2 class="text-2xl md:text-2xl font-bold text-gray-900 leading-tight mb-4">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-tight mb-4">
                 {{ featured_article.title }}
             </h2>
 
@@ -99,7 +94,7 @@
             </p>
 
             {% if featured_article.author %}
-            <div class="flex items-center gap-3 mb-6">
+            <div class="flex items-center gap-3 mb-6 news-author-row">
 
                 {% if featured_article.author.photo %}
                 <img
@@ -125,7 +120,7 @@
             </div>
             {% endif %}
 
-            <div class="flex items-center gap-2 text-sm text-gray-500 border-t border-gray-200 pt-5 mb-8">
+            <div class="flex items-center gap-2 text-sm text-gray-500 border-t border-gray-200 pt-5 mb-8 news-featured-meta">
                 <span class="font-semibold text-gray-700">Published:</span>
                 <time datetime="{{ featured_article.published_at|date:'c' }}">
                     {{ featured_article.published_at|date:"F j, Y" }}
@@ -156,7 +151,7 @@
 
 <section class="mb-20">
 
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex items-start md:items-center justify-between gap-4 mb-6 md:mb-8">
 
         <div>
 
@@ -164,24 +159,24 @@
                 Trending
             </p>
 
-            <h2 class="text-3xl font-bold text-gray-900 mt-2">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-2">
                 Most Popular Publications
             </h2>
 
         </div>
 
-        <div class="hidden md:block text-sm text-gray-500">
+        <div class="hidden md:block text-sm text-gray-500 text-right">
             Based on publication views
         </div>
 
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
 
         {% for article in popular_articles %}
 
         <a href="{% url 'news:news_detail_slug' article.slug %}"
-           class="group bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition">
+           class="group bg-white border border-gray-200 rounded-2xl p-4 md:p-5 hover:shadow-lg transition">
 
             <div class="flex items-center justify-between mb-4">
 
@@ -223,23 +218,23 @@
 
 {% endif %}
 
-<section class="mt-24 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+<section class="mt-16 md:mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
 
 {% for item in news %}
 
-<article class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border">
+<article class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border news-list-card">
 
     {% if item.image %}
     <img
         src="{{ item.image.url }}"
         alt="{{ item.title }}"
-        class="h-56 w-full object-cover group-hover:scale-105 transition duration-500"
+        class="h-48 md:h-56 w-full object-cover group-hover:scale-105 transition duration-500 news-list-image"
     >
     {% endif %}
 
-    <div class="p-6">
+    <div class="p-4 md:p-6">
 
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-start justify-between gap-3 mb-4 news-list-meta">
 
     {% if item.category %}
     <span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
@@ -247,7 +242,7 @@
     </span>
     {% endif %}
 
-    <div class="text-right text-xs text-gray-500">
+    <div class="text-right text-xs text-gray-500 news-list-date">
 
         <div>
             {{ item.published_at|date:"M d, Y" }}
@@ -260,7 +255,7 @@
     </div>
 
 </div>
-        <h2 class="text-xl font-bold mb-3">
+        <h2 class="text-lg md:text-xl font-bold mb-3 leading-snug">
 
             <a href="{% url 'news:news_detail_slug' item.slug %}">
                 {{ item.title }}
@@ -270,7 +265,7 @@
 
         {% if item.author %}
 
-        <div class="flex items-center gap-3 mb-4">
+        <div class="flex items-center gap-3 mb-4 news-list-author">
 
             {% if item.author.photo %}
             <img
@@ -295,7 +290,7 @@
 
         {% endif %}
 
-        <p class="text-gray-600 mb-6">
+        <p class="text-gray-600 mb-5 md:mb-6">
 
             {{ item.excerpt|truncatewords:25 }}
 
@@ -314,7 +309,7 @@
 
 {% empty %}
 
-<div class="col-span-full text-center py-16">
+    <div class="col-span-full text-center py-12 md:py-16">
 
     <h3 class="text-2xl font-bold mb-3">
         No publications found
@@ -332,7 +327,7 @@
 
 {% if news.has_other_pages %}
 
-<div class="flex justify-center gap-4 mt-12">
+<div class="flex flex-wrap justify-center gap-4 mt-10 md:mt-12 text-sm">
 
     {% if news.has_previous %}
     <a href="?page={{ news.previous_page_number }}"

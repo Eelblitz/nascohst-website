@@ -67,3 +67,36 @@ class NewsViewsTests(TestCase):
             response,
             "Sample Publication",
         )
+
+    def test_news_detail_page_emits_expected_csp_header(self):
+        response = self.client.get(
+            reverse(
+                "news:news_detail_slug",
+                kwargs={"slug": self.article.slug},
+            )
+        )
+
+        csp = response.headers.get("Content-Security-Policy", "")
+
+        self.assertIn("default-src 'self'", csp)
+        self.assertIn("script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'", csp)
+        self.assertIn("style-src 'self' https://fonts.googleapis.com 'unsafe-inline'", csp)
+        self.assertIn("font-src 'self' https://fonts.gstatic.com", csp)
+        self.assertIn("img-src 'self' data: https://res.cloudinary.com", csp)
+
+    def test_news_detail_page_shows_comments_and_share_links(self):
+        response = self.client.get(
+            reverse(
+                "news:news_detail_slug",
+                kwargs={"slug": self.article.slug},
+            )
+        )
+
+        self.assertContains(response, "Comments")
+        self.assertContains(response, "Leave a comment")
+        self.assertContains(response, "Submit Comment")
+        self.assertContains(response, "WhatsApp")
+        self.assertContains(response, "LinkedIn")
+        self.assertContains(response, "Facebook")
+        self.assertContains(response, "Instagram")
+        self.assertContains(response, "X")

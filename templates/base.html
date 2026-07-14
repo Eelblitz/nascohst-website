@@ -109,11 +109,12 @@
     </nav>
 
     <!-- Mobile Button -->
-    <button onclick="toggleMenu()"
-            class="md:hidden text-white focus:outline-none mobile-menu-button"
+    <button id="mobileMenuButton"
             type="button"
+            class="md:hidden text-white focus:outline-none mobile-menu-button"
             aria-label="Open navigation menu"
-            aria-controls="mobileMenu">
+            aria-controls="mobileMenu"
+            aria-expanded="false">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
            fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round"
@@ -140,7 +141,7 @@
    Portal
 </a>
       <a href="/contact/" class="block hover:text-accent">Contact</a>
-      <a href="/gallery/" class="hover:underline">Gallery</a>
+      <a href="/gallery/" class="block hover:text-accent">Gallery</a>
     </nav>
   </div>
 </header>
@@ -194,13 +195,6 @@
 </footer>
 
 <!-- Scripts -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  window.toggleMenu = function () {
-    document.getElementById('mobileMenu').classList.toggle('hidden');
-  };
-});
-</script>
 
 <script src="{% static 'js/site.js' %}" defer></script>
 
