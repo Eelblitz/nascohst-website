@@ -83,3 +83,20 @@ class NewsViewsTests(TestCase):
         self.assertIn("style-src 'self' https://fonts.googleapis.com 'unsafe-inline'", csp)
         self.assertIn("font-src 'self' https://fonts.gstatic.com", csp)
         self.assertIn("img-src 'self' data: https://res.cloudinary.com", csp)
+
+    def test_news_detail_page_shows_comments_and_share_links(self):
+        response = self.client.get(
+            reverse(
+                "news:news_detail_slug",
+                kwargs={"slug": self.article.slug},
+            )
+        )
+
+        self.assertContains(response, "Comments")
+        self.assertContains(response, "Leave a comment")
+        self.assertContains(response, "Submit Comment")
+        self.assertContains(response, "WhatsApp")
+        self.assertContains(response, "LinkedIn")
+        self.assertContains(response, "Facebook")
+        self.assertContains(response, "Instagram")
+        self.assertContains(response, "X")
