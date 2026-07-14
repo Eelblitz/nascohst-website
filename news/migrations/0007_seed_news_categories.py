@@ -77,10 +77,14 @@ def seed_categories(apps, schema_editor):
 
     category_names = list(dict.fromkeys(category_names))
 
-    existing = set(Category.objects.values_list("name", flat=True))
-    Category.objects.bulk_create(
-        [Category(name=name) for name in category_names if name not in existing]
-    )
+    # Backfill any legacy rows that still have blank slugs from older imports.
+    for category in Category.objects.filter(slug=""):
+        category.save()
+
+    for name in category_names:
+        category, created = Category.objects.get_or_create(name=name)
+        if created or not category.slug:
+            category.save()
 
 
 def unseed_categories(apps, schema_editor):
