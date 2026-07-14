@@ -1,4 +1,15 @@
 from django.db import migrations
+from django.utils.text import slugify
+
+
+def build_unique_slug(base_slug, existing_slugs):
+    slug = base_slug or "category"
+    counter = 1
+    while slug in existing_slugs:
+        slug = f"{base_slug}-{counter}" if base_slug else f"category-{counter}"
+        counter += 1
+    existing_slugs.add(slug)
+    return slug
 
 
 def seed_categories(apps, schema_editor):
@@ -77,14 +88,24 @@ def seed_categories(apps, schema_editor):
 
     category_names = list(dict.fromkeys(category_names))
 
+    existing_slugs = set(
+        Category.objects.exclude(slug="").values_list("slug", flat=True)
+    )
+    existing_names = set(Category.objects.values_list("name", flat=True))
+
     # Backfill any legacy rows that still have blank slugs from older imports.
     for category in Category.objects.filter(slug=""):
-        category.save()
+        category.slug = build_unique_slug(slugify(category.name), existing_slugs)
+        category.save(update_fields=["slug"])
 
     for name in category_names:
-        category, created = Category.objects.get_or_create(name=name)
-        if created or not category.slug:
-            category.save()
+        if name in existing_names:
+            continue
+
+        Category.objects.create(
+            name=name,
+            slug=build_unique_slug(slugify(name), existing_slugs),
+        )
 
 
 def unseed_categories(apps, schema_editor):
