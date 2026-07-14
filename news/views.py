@@ -3,7 +3,32 @@ from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.utils.timezone import now
-from django.db.models import Q, F, Count
+from django.db.models import Q, F, Count, Case, When, Value, IntegerField
+
+
+CATEGORY_GROUP_ORDER = {
+    "Institutional News": 0,
+    "Academic Publications": 1,
+    "Public Health": 2,
+    "Clinical Sciences": 3,
+    "Health Sciences Education": 4,
+    "Technology & Innovation": 5,
+    "Policy & Governance": 6,
+    "Student Corner": 7,
+}
+
+
+def ordered_categories(queryset):
+    return queryset.annotate(
+        group_order=Case(
+            *[
+                When(name=name, then=Value(order))
+                for name, order in CATEGORY_GROUP_ORDER.items()
+            ],
+            default=Value(999),
+            output_field=IntegerField(),
+        )
+    ).order_by("group_order", "name")
 
 
 
@@ -41,7 +66,7 @@ def news_list(request):
     page_number = request.GET.get("page")
     news = paginator.get_page(page_number)
 
-    categories = Category.objects.all()
+    categories = ordered_categories(Category.objects.all())
     popular_articles = (
         News.objects.filter(
             status=News.PUBLISHED,
@@ -180,10 +205,9 @@ def news_detail_slug(request, slug):
 
     # Categories with article count
     categories = (
-        Category.objects.annotate(
+        ordered_categories(Category.objects.annotate(
             article_count=Count("articles")
-        )
-        .order_by("name")
+        ))
     )
 
     # Latest approved comments
