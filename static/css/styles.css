@@ -147,7 +147,16 @@ button, input, select, textarea {
 .block { display: block; }
 .hidden { display: none; }
 .grid { display: grid; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .shrink-0 { flex-shrink: 0; }
+.min-w-0 { min-width: 0; }
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
 .gap-3 { gap: 0.75rem; }
 .gap-4 { gap: 1rem; }
 .gap-6 { gap: 1.5rem; }
@@ -250,6 +259,10 @@ button, input, select, textarea {
 
   .lg\:grid {
     display: grid;
+  }
+
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .lg\:grid-cols-12 {
