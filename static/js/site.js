@@ -2,13 +2,48 @@
 // Mobile Navigation
 // --------------------------------------------------
 
+function setMobileMenuState(menu, button, open) {
+  if (!menu || !button) {
+    return;
+  }
+
+  menu.classList.toggle("hidden", !open);
+  button.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
 function toggleMenu() {
   const menu = document.getElementById("mobileMenu");
+  const button = document.getElementById("mobileMenuButton");
 
-  if (menu) {
-    menu.classList.toggle("hidden");
+  if (!menu || !button) {
+    return;
   }
+
+  setMobileMenuState(menu, button, menu.classList.contains("hidden"));
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const menu = document.getElementById("mobileMenu");
+  const button = document.getElementById("mobileMenuButton");
+
+  if (!menu || !button) {
+    return;
+  }
+
+  button.addEventListener("click", toggleMenu);
+
+  menu.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      setMobileMenuState(menu, button, false);
+    });
+  });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth >= 768) {
+      setMobileMenuState(menu, button, false);
+    }
+  });
+});
 
 
 // --------------------------------------------------
