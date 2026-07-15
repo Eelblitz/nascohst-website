@@ -129,6 +129,12 @@ class NewsAdmin(admin.ModelAdmin):
         }),
     )
 
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        obj = form.instance
+        if not obj.publication_authors.exists():
+            obj.ensure_legacy_publication_author()
+
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):

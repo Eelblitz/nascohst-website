@@ -81,6 +81,7 @@ class NewsModelTests(TestCase):
             content="<p>Body</p>",
             author=staff,
         )
+        article.ensure_legacy_publication_author()
 
         self.assertEqual(article.publication_authors.count(), 1)
         author = article.publication_authors.first()
@@ -175,6 +176,7 @@ class NewsViewsTests(TestCase):
             status=News.PUBLISHED,
             author=self.staff,
         )
+        self.article.ensure_legacy_publication_author()
 
     def test_news_list_page_loads(self):
         response = self.client.get(

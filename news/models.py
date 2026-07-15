@@ -152,24 +152,22 @@ class News(models.Model):
             self.excerpt = plain_text
 
         super().save(*args, **kwargs)
-        self._sync_legacy_author()
 
-    def _sync_legacy_author(self):
+    def ensure_legacy_publication_author(self):
         if not self.author_id:
-            return
+            return None
 
-        if self.publication_authors.exists():
-            return
-
-        PublicationAuthor.objects.create(
+        return PublicationAuthor.objects.get_or_create(
             publication=self,
             staff=self.author,
-            external_name=self.author.name,
-            affiliation=self.author.department,
-            is_primary=True,
-            is_corresponding=True,
-            display_order=1,
-        )
+            defaults={
+                "external_name": self.author.name,
+                "affiliation": self.author.department,
+                "is_primary": True,
+                "is_corresponding": True,
+                "display_order": 1,
+            },
+        )[0]
 
     def reading_time(self):
         """
@@ -188,16 +186,36 @@ class News(models.Model):
         author = self.publication_authors.select_related("staff").filter(is_primary=True).order_by("display_order").first()
         if author:
             return author
-        return self.publication_authors.select_related("staff").order_by("display_order").first()
+        author = self.publication_authors.select_related("staff").order_by("display_order").first()
+        if author:
+            return author
+        if self.author_id:
+            return PublicationAuthor(
+                publication=self,
+                staff=self.author,
+                external_name=self.author.name,
+                affiliation=self.author.department,
+                is_primary=True,
+                is_corresponding=True,
+                display_order=1,
+            )
+        return None
 
     def corresponding_author(self):
         author = self.publication_authors.select_related("staff").filter(is_corresponding=True).order_by("display_order").first()
         if author:
             return author
+        if self.author_id:
+            return self.primary_author()
         return self.primary_author()
 
     def author_list(self):
-        return self.publication_authors.select_related("staff").order_by("display_order", "id")
+        authors = self.publication_authors.select_related("staff").order_by("display_order", "id")
+        if authors.exists():
+            return authors
+        if self.author_id:
+            return [self.primary_author()]
+        return []
 
     def citation_authors(self):
         authors = list(self.author_list())
