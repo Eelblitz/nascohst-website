@@ -93,27 +93,27 @@
                 {{ featured_article.excerpt }}
             </p>
 
-            {% if featured_article.author %}
+            {% if featured_article.primary_author %}
             <div class="flex items-center gap-3 mb-6 news-author-row">
 
-                {% if featured_article.author.photo %}
+                {% if featured_article.primary_author.staff and featured_article.primary_author.staff.photo %}
                 <img
-                    src="{{ featured_article.author.photo.url }}"
-                    alt="{{ featured_article.author.name }}"
+                    src="{{ featured_article.primary_author.staff.photo.url }}"
+                    alt="{{ featured_article.primary_author.citation_name }}"
                     class="w-10 h-10 shrink-0 rounded-full object-cover"
                 >
                 {% else %}
                 <div class="w-12 h-12 shrink-0 rounded-full bg-green-100 flex items-center justify-center text-primary font-bold">
-                    {{ featured_article.author.name|first }}
+                    {{ featured_article.primary_author.citation_name|first }}
                 </div>
                 {% endif %}
 
                 <div class="min-w-0">
                     <h4 class="font-semibold text-gray-900 truncate">
-                        {{ featured_article.author.name }}
+                        {{ featured_article.primary_author.citation_name }}
                     </h4>
                     <p class="text-sm text-gray-500 truncate">
-                        {{ featured_article.author.department }}
+                        {{ featured_article.primary_author.affiliation }}
                     </p>
                 </div>
 
@@ -263,25 +263,29 @@
 
         </h2>
 
-        {% if item.author %}
+        {% if item.primary_author %}
 
         <div class="flex items-center gap-3 mb-4 news-list-author">
 
-            {% if item.author.photo %}
+            {% if item.primary_author.staff and item.primary_author.staff.photo %}
             <img
-                src="{{ item.author.photo.url }}"
+                src="{{ item.primary_author.staff.photo.url }}"
                 class="w-10 h-10 rounded-full object-cover"
             >
+            {% else %}
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-primary font-semibold">
+                {{ item.primary_author.citation_name|first }}
+            </div>
             {% endif %}
 
             <div>
 
                 <p class="text-sm font-medium">
-                    {{ item.author.name }}
+                    {{ item.primary_author.citation_name }}
                 </p>
 
                 <p class="text-xs text-gray-500">
-                    {{ item.author.department }}
+                    {{ item.primary_author.affiliation }}
                 </p>
 
             </div>

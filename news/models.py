@@ -1,6 +1,7 @@
 import math
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.utils.html import strip_tags
 from django_ckeditor_5.fields import CKEditor5Field
@@ -151,6 +152,24 @@ class News(models.Model):
             self.excerpt = plain_text
 
         super().save(*args, **kwargs)
+        self._sync_legacy_author()
+
+    def _sync_legacy_author(self):
+        if not self.author_id:
+            return
+
+        if self.publication_authors.exists():
+            return
+
+        PublicationAuthor.objects.create(
+            publication=self,
+            staff=self.author,
+            external_name=self.author.name,
+            affiliation=self.author.department,
+            is_primary=True,
+            is_corresponding=True,
+            display_order=1,
+        )
 
     def reading_time(self):
         """
@@ -164,7 +183,105 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+    def primary_author(self):
+        author = self.publication_authors.select_related("staff").filter(is_primary=True).order_by("display_order").first()
+        if author:
+            return author
+        return self.publication_authors.select_related("staff").order_by("display_order").first()
+
+    def corresponding_author(self):
+        author = self.publication_authors.select_related("staff").filter(is_corresponding=True).order_by("display_order").first()
+        if author:
+            return author
+        return self.primary_author()
+
+    def author_list(self):
+        return self.publication_authors.select_related("staff").order_by("display_order", "id")
+
+    def citation_authors(self):
+        authors = list(self.author_list())
+        names = [author.citation_name for author in authors]
+        if not names and self.author:
+            names = [self.author.name]
+        return self._format_citation_names(names)
+
+    def has_external_authors(self):
+        return self.publication_authors.filter(staff__isnull=True).exists()
+
+    @staticmethod
+    def _format_citation_names(names):
+        if not names:
+            return ""
+        if len(names) == 1:
+            return names[0]
+        if len(names) == 2:
+            return f"{names[0]} and {names[1]}"
+        return f"{', '.join(names[:-1])}, and {names[-1]}"
+
+
+class PublicationAuthor(models.Model):
+    publication = models.ForeignKey(
+        News,
+        on_delete=models.CASCADE,
+        related_name="publication_authors",
+    )
+    staff = models.ForeignKey(
+        "staff.Staff",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="publication_authorships",
+    )
+    external_name = models.CharField(max_length=200)
+    affiliation = models.CharField(max_length=200, blank=True)
+    email = models.EmailField(blank=True)
+    orcid = models.CharField(max_length=255, blank=True)
+    is_primary = models.BooleanField(default=False)
+    is_corresponding = models.BooleanField(default=False)
+    display_order = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        ordering = ["display_order", "id"]
+        verbose_name = "Publication Author"
+        verbose_name_plural = "Publication Authors"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["publication"],
+                condition=models.Q(is_corresponding=True),
+                name="unique_corresponding_author_per_publication",
+            ),
+        ]
+
+    def clean(self):
+        super().clean()
+        if self.is_corresponding and self.publication_id:
+            conflict = PublicationAuthor.objects.filter(
+                publication=self.publication,
+                is_corresponding=True,
+            ).exclude(pk=self.pk)
+            if conflict.exists():
+                raise ValidationError({"is_corresponding": "Only one corresponding author is allowed per publication."})
+
+    def save(self, *args, **kwargs):
+        if self.staff and not self.external_name:
+            self.external_name = self.staff.name
+        if self.staff and not self.affiliation:
+            self.affiliation = self.staff.department
+        if not self.external_name:
+            raise ValidationError({"external_name": "Author name is required."})
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    @property
+    def citation_name(self):
+        if self.staff:
+            return self.staff.name
+        return self.external_name
+
+    def __str__(self):
+        return self.citation_name
+
     # --------------------------------------------------
 # Comments
 # --------------------------------------------------
