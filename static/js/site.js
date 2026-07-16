@@ -130,3 +130,65 @@ function copyPublicationLink() {
     alert("Publication link copied successfully.");
 
 }
+
+
+// --------------------------------------------------
+// Homepage Popup
+// --------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", function () {
+  const popup = document.getElementById("homepagePopup");
+
+  if (!popup) {
+    return;
+  }
+
+  const closeButtons = popup.querySelectorAll("[data-popup-close]");
+  const focusableSelector = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+  let lastFocusedElement = null;
+
+  function getFocusableElements() {
+    return Array.from(popup.querySelectorAll(focusableSelector)).filter(function (element) {
+      return element.offsetParent !== null;
+    });
+  }
+
+  function openPopup() {
+    lastFocusedElement = document.activeElement;
+    popup.classList.remove("hidden");
+    document.body.classList.add("popup-open");
+    popup.focus();
+
+    const focusable = getFocusableElements();
+    if (focusable.length) {
+      focusable[0].focus();
+    }
+  }
+
+  function closePopup() {
+    popup.classList.add("hidden");
+    document.body.classList.remove("popup-open");
+
+    if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+      lastFocusedElement.focus();
+    }
+  }
+
+  closeButtons.forEach(function (button) {
+    button.addEventListener("click", closePopup);
+  });
+
+  popup.addEventListener("click", function (event) {
+    if (event.target === popup || event.target.classList.contains("site-popup__overlay")) {
+      closePopup();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !popup.classList.contains("hidden")) {
+      closePopup();
+    }
+  });
+
+  setTimeout(openPopup, 100);
+});

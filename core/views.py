@@ -2,14 +2,16 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.timezone import now
 from django.core.cache import cache
+from django.utils import timezone
 from datetime import datetime
 
 from django.db.utils import OperationalError, ProgrammingError
+from django.db.models import Q
 
 from staff.models import Staff
 from academics.models import Programme
 from news.models import News
-from .models import AboutPage
+from .models import AboutPage, SitePopup
 
 
 def robots_txt(request):
@@ -18,10 +20,12 @@ def robots_txt(request):
 
 def home(request):
     year = datetime.now().year
+    current_time = timezone.now()
 
     management_staff = []
     search_data = []
     latest_news = []
+    active_popup = None
 
     try:
         management_staff = cache.get_or_set(
@@ -62,6 +66,14 @@ def home(request):
                 "url": f"/news/{item.id}/"
             })
 
+        popup_qs = SitePopup.objects.filter(
+            is_active=True
+        ).filter(
+            Q(start_date__isnull=True) | Q(start_date__lte=current_time),
+            Q(end_date__isnull=True) | Q(end_date__gte=current_time),
+        )
+        active_popup = popup_qs.order_by('display_order', '-created_at').first()
+
     except (OperationalError, ProgrammingError):
         pass
 
@@ -69,6 +81,7 @@ def home(request):
         'management_staff': management_staff,
         'search_data': search_data,
         'latest_news': latest_news,
+        'active_popup': active_popup,
         'year': year,
     })
 
