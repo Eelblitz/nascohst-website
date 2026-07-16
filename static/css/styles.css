@@ -183,6 +183,77 @@ button, input, select, textarea {
 .hover\:bg-green-800:hover { background-color: #065F46; }
 .hover\:text-primary:hover { color: #0F5D3B; }
 
+body.popup-open {
+  overflow: hidden;
+}
+
+.site-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.site-popup.hidden {
+  display: none;
+}
+
+.site-popup__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.72);
+}
+
+.site-popup__panel {
+  position: relative;
+  z-index: 1;
+  width: min(42rem, 100%);
+  max-height: min(90vh, 48rem);
+  overflow: auto;
+}
+
+.site-popup__content {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.25rem;
+}
+
+.site-popup__media img {
+  width: 100%;
+  max-height: 18rem;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+.site-popup__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.site-popup__close:focus,
+.popup-cta:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(15, 93, 59, 0.25);
+}
+
+.popup-cta {
+  justify-content: center;
+}
+
 .site-brand {
   min-width: 0;
 }
@@ -240,6 +311,18 @@ button, input, select, textarea {
 
   .staff-photo--large {
     width: min(100%, 15rem);
+  }
+
+  .site-popup {
+    padding: 0.75rem;
+  }
+
+  .site-popup__content {
+    padding: 1rem;
+  }
+
+  .site-popup__panel {
+    max-height: 92vh;
   }
 }
 

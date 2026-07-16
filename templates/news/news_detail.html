@@ -96,20 +96,21 @@
             <div class="article-meta">
                 <div class="flex items-center gap-4">
 
-                    {% if news.author %}
+                    {% with primary_author=news.primary_author corresponding_author=news.corresponding_author %}
+                    {% if primary_author %}
 
-                        {% if news.author.photo %}
+                        {% if primary_author.staff and primary_author.staff.photo %}
 
                         <img
-                            src="{{ news.author.photo.url }}"
-                            alt="{{ news.author.name }}"
+                            src="{{ primary_author.staff.photo.url }}"
+                            alt="{{ primary_author.citation_name }}"
                             class="w-14 h-14 rounded-full object-cover">
 
                         {% else %}
 
                         <div class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center font-bold">
 
-                            {{ news.author.name|first }}
+                            {{ primary_author.citation_name|first }}
 
                         </div>
 
@@ -119,19 +120,26 @@
 
                             <h3 class="font-semibold">
 
-                                {{ news.author.name }}
+                                Primary Author: {{ primary_author.citation_name }}
 
                             </h3>
 
                             <p class="text-sm text-gray-500">
 
-                                {{ news.author.department }}
+                                {{ primary_author.affiliation }}
 
                             </p>
+
+                            {% if corresponding_author and corresponding_author != primary_author %}
+                            <p class="text-xs text-gray-500 mt-1">
+                                Corresponding Author: {{ corresponding_author.citation_name }}
+                            </p>
+                            {% endif %}
 
                         </div>
 
                     {% endif %}
+                    {% endwith %}
 
                 </div>
 
@@ -223,7 +231,7 @@
         <!-- About the Author -->
         <!-- ========================================= -->
 
-        {% if news.author %}
+        {% if news.author_list %}
 
         <section class="mt-12">
 
@@ -231,78 +239,29 @@
 
                 <h2 class="text-2xl font-bold mb-8">
 
-                    About the Author
+                    Authors &amp; Affiliations
 
                 </h2>
-
-                <!-- Change Line 246 -->
             <div class="author-layout news-detail-author">
-
-
-                    {% if news.author.photo %}
-
-                        <img
-                            src="{{ news.author.photo.url }}"
-                            alt="{{ news.author.name }}"
-                            class="w-32 h-32 rounded-full object-cover">
-
-                    {% else %}
-
-                        <div class="w-32 h-32 rounded-full bg-primary text-white flex items-center justify-center text-5xl font-bold">
-
-                            {{ news.author.name|first }}
-
-                        </div>
-
-                    {% endif %}
 
                     <div class="news-detail-author__bio">
 
-                        <h3 class="text-2xl font-bold">
-
-                            {{ news.author.name }}
-
-                        </h3>
-
-                        <p class="text-primary font-semibold mt-2">
-
-                            {{ news.author.designation }}
-
-                        </p>
-
-                        {% if news.author.department %}
-
-                        <p class="text-gray-500 mt-2">
-
-                            {{ news.author.department }}
-
-                        </p>
-
-                        {% endif %}
-
-                        {% if news.author.qualifications %}
-
-                        <p class="mt-4">
-
-                            {{ news.author.qualifications }}
-
-                        </p>
-
-                        {% endif %}
+                        <div class="space-y-4">
+                            {% for publication_author in news.author_list %}
+                            <div>
+                                <h3 class="text-2xl font-bold">
+                                    {{ publication_author.citation_name }}{% if publication_author.is_primary %}<sup>1</sup>{% endif %}{% if publication_author.is_corresponding %}<sup>*</sup>{% endif %}
+                                </h3>
+                                {% if publication_author.affiliation %}
+                                <p class="text-gray-500 mt-2">
+                                    {{ publication_author.affiliation }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
 
                     </div>
-
-                </div>
-
-                {% if news.author.biography %}
-
-                <div class="mt-8 text-gray-700 leading-relaxed">
-
-                    {{ news.author.biography|linebreaks }}
-
-                </div>
-
-                {% endif %}
 
             </div>
 

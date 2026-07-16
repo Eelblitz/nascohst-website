@@ -1,5 +1,50 @@
+from django import forms
 from django.contrib import admin
-from .models import News, Category, Comment
+from django.core.exceptions import ValidationError
+
+from .models import News, Category, Comment, PublicationAuthor
+
+
+class PublicationAuthorInlineFormSet(forms.BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+
+        corresponding_count = 0
+        primary_count = 0
+
+        for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
+            if form.cleaned_data.get("DELETE", False):
+                continue
+            if form.cleaned_data.get("is_corresponding"):
+                corresponding_count += 1
+            if form.cleaned_data.get("is_primary"):
+                primary_count += 1
+
+        if corresponding_count > 1:
+            raise ValidationError("Only one corresponding author can be marked per publication.")
+
+        if primary_count == 0 and self.forms:
+            raise ValidationError("At least one primary author should be selected.")
+
+
+class PublicationAuthorInline(admin.TabularInline):
+    model = PublicationAuthor
+    extra = 1
+    fields = (
+        "display_order",
+        "staff",
+        "external_name",
+        "affiliation",
+        "email",
+        "orcid",
+        "is_primary",
+        "is_corresponding",
+    )
+    ordering = ("display_order", "id")
+    autocomplete_fields = ("staff",)
+    formset = PublicationAuthorInlineFormSet
 
 
 @admin.register(Category)
@@ -37,6 +82,7 @@ class NewsAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
     autocomplete_fields = ["author"]
+    inlines = [PublicationAuthorInline]
 
     ordering = ("-published_at",)
 
@@ -82,6 +128,12 @@ class NewsAdmin(admin.ModelAdmin):
             )
         }),
     )
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        obj = form.instance
+        if not obj.publication_authors.exists():
+            obj.ensure_legacy_publication_author()
 
 
 @admin.register(Comment)

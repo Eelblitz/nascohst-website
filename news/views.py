@@ -42,6 +42,7 @@ def news_list(request):
             published_at__lte=now(),
         )
         .select_related("author", "category")
+        .prefetch_related("publication_authors__staff")
         .order_by("-featured", "-published_at")
     )
 
@@ -51,6 +52,8 @@ def news_list(request):
             | Q(excerpt__icontains=search_query)
             | Q(content__icontains=search_query)
             | Q(author__name__icontains=search_query)
+            | Q(publication_authors__external_name__icontains=search_query)
+            | Q(publication_authors__affiliation__icontains=search_query)
             | Q(category__name__icontains=search_query)
         )
 
@@ -72,6 +75,7 @@ def news_list(request):
             status=News.PUBLISHED,
             published_at__lte=now(),
         )
+        .prefetch_related("publication_authors__staff")
         .exclude(pk=featured_article.pk if featured_article else None)
         .order_by("-views")[:5]
     )
@@ -124,7 +128,8 @@ def news_detail(request, pk):
         News.objects.filter(status=News.PUBLISHED)
         .filter(
             Q(category=news.category) |
-            Q(author=news.author)
+            Q(author=news.author) |
+            Q(publication_authors__external_name__in=[author.citation_name for author in news.author_list()])
         )
         .exclude(pk=news.pk)
         .distinct()[:3]
@@ -183,7 +188,8 @@ def news_detail_slug(request, slug):
         News.objects.filter(status=News.PUBLISHED)
         .filter(
             Q(category=news.category) |
-            Q(author=news.author)
+            Q(author=news.author) |
+            Q(publication_authors__external_name__in=[author.citation_name for author in news.author_list()])
         )
         .exclude(pk=news.pk)
         .distinct()[:3]
@@ -192,6 +198,7 @@ def news_detail_slug(request, slug):
     # Most read
     popular_articles = (
         News.objects.filter(status=News.PUBLISHED)
+        .prefetch_related("publication_authors__staff")
         .exclude(pk=news.pk)
         .order_by("-views")[:5]
     )
@@ -199,6 +206,7 @@ def news_detail_slug(request, slug):
     # Recent publications
     recent_articles = (
         News.objects.filter(status=News.PUBLISHED)
+        .prefetch_related("publication_authors__staff")
         .exclude(pk=news.pk)
         .order_by("-published_at")[:5]
     )
