@@ -98,46 +98,39 @@
 
                     {% with primary_author=news.primary_author corresponding_author=news.corresponding_author %}
                     {% if primary_author %}
-
-                        {% if primary_author.staff and primary_author.staff.photo %}
-
-                        <img
-                            src="{{ primary_author.staff.photo.url }}"
-                            alt="{{ primary_author.citation_name }}"
-                            class="w-14 h-14 rounded-full object-cover">
-
+                        {% if primary_author.researcher %}
+                        {% with researcher=primary_author.researcher affiliation=primary_author.affiliation profile_url=True %}
+                        {% include "researchers/partials/researcher_card.html" with wrapper_class="flex items-center gap-4" image_class="w-14 h-14 rounded-full object-cover" fallback_class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center font-bold" %}
+                        {% endwith %}
                         {% else %}
-
-                        <div class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center font-bold">
-
-                            {{ primary_author.citation_name|first }}
-
-                        </div>
-
-                        {% endif %}
-
-                        <div>
-
-                            <h3 class="font-semibold">
-
-                                Primary Author: {{ primary_author.citation_name }}
-
-                            </h3>
-
-                            <p class="text-sm text-gray-500">
-
-                                {{ primary_author.affiliation }}
-
-                            </p>
-
-                            {% if corresponding_author and corresponding_author != primary_author %}
-                            <p class="text-xs text-gray-500 mt-1">
-                                Corresponding Author: {{ corresponding_author.citation_name }}
-                            </p>
+                        <div class="flex items-center gap-4">
+                            {% if primary_author.staff and primary_author.staff.photo %}
+                            <img
+                                src="{{ primary_author.staff.photo.url }}"
+                                alt="{{ primary_author.citation_name }}"
+                                class="w-14 h-14 rounded-full object-cover">
+                            {% else %}
+                            <div class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+                                {{ primary_author.citation_name|first }}
+                            </div>
                             {% endif %}
 
+                            <div>
+                                <h3 class="font-semibold">
+                                    Primary Author: {{ primary_author.citation_name }}
+                                </h3>
+                                <p class="text-sm text-gray-500">
+                                    {{ primary_author.affiliation }}
+                                </p>
+                            </div>
                         </div>
+                        {% endif %}
 
+                        {% if corresponding_author and corresponding_author != primary_author %}
+                        <p class="text-xs text-gray-500 mt-1">
+                            Corresponding Author: {{ corresponding_author.citation_name }}
+                        </p>
+                        {% endif %}
                     {% endif %}
                     {% endwith %}
 
@@ -249,9 +242,15 @@
                         <div class="space-y-4">
                             {% for publication_author in news.author_list %}
                             <div>
+                                {% if publication_author.researcher %}
+                                {% with researcher=publication_author.researcher affiliation=publication_author.affiliation profile_url=True %}
+                                {% include "researchers/partials/researcher_card.html" with wrapper_class="flex items-center gap-3" image_class="w-10 h-10 rounded-full object-cover" %}
+                                {% endwith %}
+                                {% else %}
                                 <h3 class="text-2xl font-bold">
                                     {{ publication_author.citation_name }}{% if publication_author.is_primary %}<sup>1</sup>{% endif %}{% if publication_author.is_corresponding %}<sup>*</sup>{% endif %}
                                 </h3>
+                                {% endif %}
                                 {% if publication_author.affiliation %}
                                 <p class="text-gray-500 mt-2">
                                     {{ publication_author.affiliation }}

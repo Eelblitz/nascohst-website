@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}{{ researcher.display_name }} | Researchers | NasCOHST{% endblock %}
+
+{% block content %}
+
+<nav class="mb-8 text-sm text-gray-500">
+    <a href="{% url 'researchers:researcher_list' %}" class="hover:text-primary">Researchers</a>
+    <span class="mx-2 text-gray-300">/</span>
+    <span class="text-gray-900 font-semibold">{{ researcher.display_name }}</span>
+</nav>
+
+<section class="grid lg:grid-cols-[280px,1fr] gap-8">
+    <aside class="bg-white rounded-2xl shadow-sm border p-6 h-fit">
+        {% if researcher.photo %}
+        <img src="{{ researcher.photo.url }}" alt="{{ researcher.display_name }}" class="w-40 h-40 rounded-2xl object-cover mx-auto mb-4">
+        {% else %}
+        <div class="w-40 h-40 rounded-2xl bg-green-100 flex items-center justify-center text-primary font-bold text-4xl mx-auto mb-4">
+            {{ researcher.display_name|first }}
+        </div>
+        {% endif %}
+        <h1 class="text-2xl font-bold text-center">{{ researcher.display_name }}</h1>
+        {% if researcher.title %}
+        <p class="text-center text-gray-500 mt-1">{{ researcher.title }}</p>
+        {% endif %}
+        <div class="mt-6 space-y-3 text-sm text-gray-600">
+            {% if researcher.institution %}<p><span class="font-semibold text-gray-900">Institution:</span> {{ researcher.institution }}</p>{% endif %}
+            {% if researcher.department %}<p><span class="font-semibold text-gray-900">Department:</span> {{ researcher.department }}</p>{% endif %}
+            {% if researcher.country %}<p><span class="font-semibold text-gray-900">Country:</span> {{ researcher.country }}</p>{% endif %}
+            {% if researcher.city %}<p><span class="font-semibold text-gray-900">City:</span> {{ researcher.city }}</p>{% endif %}
+            {% if researcher.highest_qualification %}<p><span class="font-semibold text-gray-900">Qualification:</span> {{ researcher.highest_qualification }}</p>{% endif %}
+            {% if researcher.email %}<p><span class="font-semibold text-gray-900">Email:</span> <a href="mailto:{{ researcher.email }}" class="text-primary hover:underline">{{ researcher.email }}</a></p>{% endif %}
+        </div>
+    </aside>
+
+    <div class="space-y-8">
+        <section class="bg-white rounded-2xl shadow-sm border p-6">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Profile</h2>
+                    <p class="text-sm text-gray-500 mt-1">{{ researcher.publication_count_total|default:0 }} publication{{ researcher.publication_count_total|default:0|pluralize }}</p>
+                </div>
+                <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold {% if researcher.is_internal %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+                    {{ researcher.is_internal|yesno:"Internal,External" }}
+                </span>
+            </div>
+            {% if researcher.biography %}
+            <div class="mt-6 prose max-w-none text-gray-700">
+                {{ researcher.biography|linebreaksbr }}
+            </div>
+            {% endif %}
+            {% if researcher.research_interests %}
+            <div class="mt-6">
+                <h3 class="font-semibold text-gray-900 mb-2">Research Interests</h3>
+                <p class="text-gray-700">{{ researcher.research_interests|linebreaksbr }}</p>
+            </div>
+            {% endif %}
+            <div class="mt-6 grid sm:grid-cols-2 gap-4 text-sm">
+                {% if researcher.orcid %}<p><span class="font-semibold">ORCID:</span> {{ researcher.orcid }}</p>{% endif %}
+                {% if researcher.google_scholar %}<p><a href="{{ researcher.google_scholar }}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Google Scholar</a></p>{% endif %}
+                {% if researcher.researchgate %}<p><a href="{{ researcher.researchgate }}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">ResearchGate</a></p>{% endif %}
+                {% if researcher.linkedin %}<p><a href="{{ researcher.linkedin }}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">LinkedIn</a></p>{% endif %}
+                {% if researcher.website %}<p><a href="{{ researcher.website }}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">Website</a></p>{% endif %}
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Publications</h2>
+            {% if publications %}
+            <div class="space-y-4">
+                {% for authorship in publications %}
+                <article class="rounded-2xl border border-gray-200 p-4">
+                    <a href="{% url 'news:news_detail_slug' authorship.publication.slug %}" class="font-semibold text-lg hover:text-primary transition">
+                        {{ authorship.publication.title }}
+                    </a>
+                    {% if authorship.publication.category %}
+                    <p class="text-xs text-gray-500 mt-1">{{ authorship.publication.category.name }}</p>
+                    {% endif %}
+                    {% if authorship.publication.excerpt %}
+                    <p class="text-gray-600 mt-3">{{ authorship.publication.excerpt|truncatewords:30 }}</p>
+                    {% endif %}
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500">No publications linked yet.</p>
+            {% endif %}
+        </section>
+    </div>
+</section>
+
+{% endblock %}

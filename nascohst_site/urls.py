@@ -9,6 +9,7 @@ from django.utils.timezone import now
 
 from news.models import News
 from academics.models import Programme, School
+from researchers.models import Researcher
 
 
 class StaticViewSitemap(Sitemap):
@@ -22,6 +23,7 @@ class StaticViewSitemap(Sitemap):
             "contact",
             "school_list",
             "staff_list",
+            "researchers:researcher_list",
             "news_list",
         ]
 
@@ -65,11 +67,26 @@ class SchoolSitemap(Sitemap):
         return reverse('school_detail', args=[obj.pk])
 
 
+class ResearcherSitemap(Sitemap):
+    changefreq = "weekly"
+    priority = 0.5
+
+    def items(self):
+        return Researcher.objects.filter(is_active=True).order_by("-updated_at")
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+    def location(self, obj):
+        return reverse("researchers:researcher_detail", args=[obj.slug])
+
+
 urlpatterns = [
     path("manage/portal/", admin.site.urls),
     path("ckeditor5/", include("django_ckeditor_5.urls")),
     path("", include("core.urls")),
     path("staff/", include("staff.urls")),
+    path("researchers/", include("researchers.urls")),
     path("academics/", include("academics.urls")),
     path("news/", include("news.urls")),
     path("gallery/", include("gallery.urls")),
@@ -83,6 +100,7 @@ urlpatterns = [
                 "news": NewsSitemap,
                 "programme": ProgrammeSitemap,
                 "school": SchoolSitemap,
+                "researcher": ResearcherSitemap,
             }
         },
         name="django.contrib.sitemaps.views.sitemap",

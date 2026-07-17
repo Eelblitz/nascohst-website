@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     # Local apps
     "core",
     "staff",
+    "researchers",
     "news",
     "gallery",
     "academics",
