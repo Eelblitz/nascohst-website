@@ -94,6 +94,11 @@
             </p>
 
             {% if featured_article.primary_author %}
+                {% if featured_article.primary_author.researcher %}
+                {% with researcher=featured_article.primary_author.researcher affiliation=featured_article.primary_author.affiliation profile_url=True %}
+                {% include "researchers/partials/researcher_card.html" with wrapper_class="flex items-center gap-3 mb-6 news-author-row" image_class="w-10 h-10 shrink-0 rounded-full object-cover" fallback_class="w-12 h-12 shrink-0 rounded-full bg-green-100 flex items-center justify-center text-primary font-bold" %}
+                {% endwith %}
+                {% else %}
             <div class="flex items-center gap-3 mb-6 news-author-row">
 
                 {% if featured_article.primary_author.staff and featured_article.primary_author.staff.photo %}
@@ -118,6 +123,7 @@
                 </div>
 
             </div>
+                {% endif %}
             {% endif %}
 
             <div class="flex items-center gap-2 text-sm text-gray-500 border-t border-gray-200 pt-5 mb-8 news-featured-meta">
@@ -264,7 +270,11 @@
         </h2>
 
         {% if item.primary_author %}
-
+            {% if item.primary_author.researcher %}
+            {% with researcher=item.primary_author.researcher affiliation=item.primary_author.affiliation profile_url=True %}
+            {% include "researchers/partials/researcher_card.html" with wrapper_class="flex items-center gap-3 mb-4 news-list-author" image_class="w-10 h-10 rounded-full object-cover" %}
+            {% endwith %}
+            {% else %}
         <div class="flex items-center gap-3 mb-4 news-list-author">
 
             {% if item.primary_author.staff and item.primary_author.staff.photo %}
@@ -291,6 +301,7 @@
             </div>
 
         </div>
+            {% endif %}
 
         {% endif %}
 
@@ -334,7 +345,7 @@
 <div class="flex flex-wrap justify-center gap-4 mt-10 md:mt-12 text-sm">
 
     {% if news.has_previous %}
-    <a href="?page={{ news.previous_page_number }}"
+    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ news.previous_page_number }}"
        class="text-primary hover:underline">
         ← Previous
     </a>
@@ -345,7 +356,7 @@
     </span>
 
     {% if news.has_next %}
-    <a href="?page={{ news.next_page_number }}"
+    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ news.next_page_number }}"
        class="text-primary hover:underline">
         Next →
     </a>

@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from news.models import News, Category, PublicationAuthor
+from researchers.models import Researcher
 from staff.models import Staff
 
 
@@ -152,6 +153,31 @@ class NewsModelTests(TestCase):
         )
 
         self.assertEqual(article.corresponding_author().citation_name, "Dr. Contact")
+
+    def test_publication_author_prefers_researcher_profile(self):
+        researcher = Researcher.objects.create(
+            display_name="Dr. Research Profile",
+            institution="NASCOHST",
+            department="Community Health",
+            is_internal=False,
+        )
+        article = News.objects.create(
+            title="Researcher Authorship",
+            content="<p>Body</p>",
+        )
+        author = PublicationAuthor.objects.create(
+            publication=article,
+            researcher=researcher,
+            external_name="Fallback Name",
+            affiliation="Fallback Affiliation",
+            display_order=1,
+            is_primary=True,
+        )
+
+        self.assertEqual(author.citation_name, "Dr. Research Profile")
+        self.assertEqual(author.external_name, "Fallback Name")
+        self.assertEqual(author.affiliation, "Fallback Affiliation")
+        self.assertEqual(article.primary_author().citation_name, "Dr. Research Profile")
 
 
 class NewsViewsTests(TestCase):

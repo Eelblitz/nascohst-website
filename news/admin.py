@@ -34,6 +34,7 @@ class PublicationAuthorInline(admin.TabularInline):
     extra = 1
     fields = (
         "display_order",
+        "researcher",
         "staff",
         "external_name",
         "affiliation",
@@ -43,7 +44,7 @@ class PublicationAuthorInline(admin.TabularInline):
         "is_corresponding",
     )
     ordering = ("display_order", "id")
-    autocomplete_fields = ("staff",)
+    autocomplete_fields = ("researcher", "staff")
     formset = PublicationAuthorInlineFormSet
 
 

@@ -56,6 +56,30 @@ This structure leaves room for later additions such as:
 - submission / revision status tracking
 - author contribution metadata
 
+## Phase 2A: Researcher profiles
+
+The Phase 2A expansion adds a dedicated `Researcher` profile model so the
+publication system can represent internal and external academic authors without
+depending only on `Staff`.
+
+### Key relationships
+
+- `Researcher` optionally links to `User` and `Staff`
+- `PublicationAuthor` can now point at a `Researcher`, a `Staff` record, or an
+  external name
+- internal researcher profiles can be prefilled from linked staff records
+
+### Compatibility rule
+
+Author rendering still follows the legacy fallback order:
+
+1. `Researcher` profile
+2. `Staff` record
+3. external name
+
+This keeps existing publication data working while the richer researcher system
+is introduced.
+
 ### Citation helper intent
 
 Helper methods on `News` now centralize author rendering:
