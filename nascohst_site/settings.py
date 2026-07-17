@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "staff",
     "researchers",
     "news",
+    "submissions",
     "gallery",
     "academics",
     "students",
