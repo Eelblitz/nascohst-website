@@ -89,6 +89,7 @@ urlpatterns = [
     path("researchers/", include("researchers.urls")),
     path("academics/", include("academics.urls")),
     path("news/", include("news.urls")),
+    path("publications/", include("submissions.urls")),
     path("gallery/", include("gallery.urls")),
 
     path(

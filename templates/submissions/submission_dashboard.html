@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}My Submissions | NasCOHST{% endblock %}
+{% block content %}
+<section class="mb-10">
+    <p class="text-sm uppercase tracking-widest text-primary font-semibold mb-2">Publications</p>
+    <h1 class="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">My Submissions</h1>
+    <p class="mt-4 max-w-3xl text-lg text-gray-500">Track drafts and submitted manuscripts in one place.</p>
+</section>
+
+<div class="flex flex-wrap gap-3 mb-8">
+    <a href="{% url 'submissions:submission_create' %}" class="inline-flex items-center rounded-xl bg-primary px-5 py-3 font-semibold text-white hover:bg-green-800 transition">
+        New Submission
+    </a>
+</div>
+
+<section class="grid gap-5">
+    {% for submission in submissions %}
+    <article class="bg-white rounded-2xl border shadow-sm p-5 md:p-6">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-gray-900">{{ submission.title }}</h2>
+                <p class="text-sm text-gray-500 mt-2">
+                    Submitted: {{ submission.submitted_at|date:"F j, Y" }} | Updated: {{ submission.updated_at|date:"F j, Y" }}
+                </p>
+                <p class="text-sm text-gray-500 mt-1">
+                    Status: {{ submission.get_status_display }}
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{% url 'submissions:submission_detail' submission.pk %}" class="text-primary font-semibold hover:underline">View Submission</a>
+                {% if submission.status == "draft" %}
+                <a href="{% url 'submissions:submission_edit' submission.pk %}" class="text-primary font-semibold hover:underline">Edit Draft</a>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+    {% empty %}
+    <div class="bg-white rounded-2xl border shadow-sm p-8 text-gray-500">
+        You have no submissions yet.
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}
+

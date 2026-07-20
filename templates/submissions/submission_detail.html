@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ submission.title }} | NasCOHST{% endblock %}
+{% block content %}
+<section class="mb-10">
+    <p class="text-sm uppercase tracking-widest text-primary font-semibold mb-2">Submission</p>
+    <h1 class="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">{{ submission.title }}</h1>
+    <p class="mt-4 max-w-3xl text-lg text-gray-500">Private submission record for the authoring researcher.</p>
+</section>
+
+<div class="grid gap-6 lg:grid-cols-2">
+    <section class="bg-white rounded-2xl border shadow-sm p-5 md:p-8">
+        <h2 class="text-xl font-bold mb-4">Details</h2>
+        <dl class="space-y-4 text-sm text-gray-700">
+            <div><dt class="font-semibold">Status</dt><dd>{{ submission.get_status_display }}</dd></div>
+            <div><dt class="font-semibold">Type</dt><dd>{{ submission.submission_type|default:"-" }}</dd></div>
+            <div><dt class="font-semibold">Category</dt><dd>{{ submission.category|default:"-" }}</dd></div>
+            <div><dt class="font-semibold">Keywords</dt><dd>{{ submission.keywords|default:"-" }}</dd></div>
+            <div><dt class="font-semibold">Abstract</dt><dd class="whitespace-pre-line">{{ submission.abstract }}</dd></div>
+        </dl>
+    </section>
+
+    <section class="bg-white rounded-2xl border shadow-sm p-5 md:p-8">
+        <h2 class="text-xl font-bold mb-4">Authors</h2>
+        <div class="space-y-4">
+            {% for author in submission.authors.all %}
+            <div class="rounded-xl border border-gray-200 p-4">
+                <p class="font-semibold">{{ author.citation_name }}</p>
+                <p class="text-sm text-gray-500">{{ author.affiliation|default:"No affiliation listed" }}</p>
+            </div>
+            {% empty %}
+            <p class="text-gray-500">No authors listed.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+
