@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from cloudinary_storage.storage import MediaCloudinaryStorage, RawMediaCloudinaryStorage
 
 from news.models import News, Category, PublicationAuthor
 from researchers.models import Researcher
@@ -8,6 +9,15 @@ from staff.models import Staff
 
 
 class NewsModelTests(TestCase):
+
+    def test_attachment_uses_raw_cloudinary_storage(self):
+        attachment_field = News._meta.get_field("attachment")
+        image_field = News._meta.get_field("image")
+
+        self.assertIsInstance(attachment_field.storage, RawMediaCloudinaryStorage)
+        self.assertEqual(attachment_field.upload_to, "news/documents/")
+        self.assertNotIsInstance(image_field.storage, RawMediaCloudinaryStorage)
+        self.assertNotEqual(image_field.storage, attachment_field.storage)
 
     def test_slug_is_generated(self):
         article = News.objects.create(

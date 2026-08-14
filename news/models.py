@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.utils.html import strip_tags
 from django_ckeditor_5.fields import CKEditor5Field
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 from researchers.models import Researcher
 
@@ -80,6 +81,7 @@ class News(models.Model):
 
     attachment = models.FileField(
         upload_to="news/documents/",
+        storage=RawMediaCloudinaryStorage(),
         blank=True,
         null=True,
         help_text="Upload a PDF, journal, circular or official document.",
